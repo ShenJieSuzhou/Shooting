@@ -88,11 +88,11 @@ public:
 
 protected:
 	
-	/** Fires a projectile. */
-	void OnFire();
+	///** Fires a projectile. */
+	//void OnFire();
 
-	/** Resets HMD orientation and position in VR. */
-	void OnResetVR();
+	///** Resets HMD orientation and position in VR. */
+	//void OnResetVR();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
