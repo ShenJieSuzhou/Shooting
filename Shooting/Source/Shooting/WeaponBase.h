@@ -16,6 +16,7 @@ class SHOOTING_API AWeaponBase : public AActor
 {
 	GENERATED_BODY()
 	
+public:
 	/** Gun mesh: 1st person view (seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* FP_Gun;

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "WeaponKnife.h"
+#include "WeaponBase.h"
 #include "ShootingCharacter.generated.h"
 
 class UInputComponent;
@@ -85,6 +87,10 @@ public:
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
+
+
+	// Primary Weapon
+	AWeaponBase* PrimaryWeapon;
 
 protected:
 	
