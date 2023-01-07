@@ -90,7 +90,8 @@ public:
 
 
 	// Primary Weapon
-	AWeaponBase* PrimaryWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	TSubclassOf<class AWeaponBase> WeaponClass;
 
 protected:
 	

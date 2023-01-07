@@ -42,6 +42,7 @@ AShootingCharacter::AShootingCharacter()
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
 	//// Create a gun mesh component
+	//PrimaryWeapon  = 
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	//FP_Gun->SetOnlyOwnerSee(false);			// otherwise won't be visible in the multiplayer
 	//FP_Gun->bCastDynamicShadow = false;
@@ -88,14 +89,25 @@ void AShootingCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
-	//PrimaryWeapon = Spawn
+	
+	if (WeaponClass != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			FVector Localtion = FVector(0.f, 0.f, 0.f);
+			FRotator Rotator = FRotator(0.f);
+			AWeaponKnife* PrimaryWeapon = World->SpawnActor<AWeaponKnife>(WeaponClass, Localtion, Rotator);
+			PrimaryWeapon->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
+		}
+	}
+	
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
 	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	//if (bUsingMotionControllers)
+	//if (bUsingMotionController
 	//{
 	//	VR_Gun->SetHiddenInGame(false, true);
 	//	Mesh1P->SetHiddenInGame(true, true);

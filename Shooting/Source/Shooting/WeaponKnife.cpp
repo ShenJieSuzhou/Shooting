@@ -5,8 +5,8 @@
 
 AWeaponKnife::AWeaponKnife()
 {
-	auto assetSkeletal = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/AK_mesh.AK_mesh'"));
-	//USkeletalMesh SkeletalMesh = LoadObject<USkeletalMesh>(NULL, TEXT("SkeletalMesh'/Game/TwinSwordAnimsetBase/UE4_Mannequin/Mesh/SK_Mannequin.SK_Mannequin'"));
+    // get knife mesh
+ 	auto assetSkeletal = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/Knife_mesh.Knife_mesh'"));
 	FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
 }
 
