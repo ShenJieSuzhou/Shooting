@@ -93,6 +93,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	TSubclassOf<class AWeaponBase> WeaponClass;
 
+	AWeaponKnife* PrimaryWeapon;
+
 protected:
 	
 	///** Fires a projectile. */

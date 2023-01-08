@@ -6,8 +6,16 @@
 AWeaponKnife::AWeaponKnife()
 {
     // get knife mesh
- 	auto assetSkeletal = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/Knife_mesh.Knife_mesh'"));
-	FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
+	if(FP_Gun)
+	{
+		auto assetSkeletal = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/ShootingPawn/rigged/Knife_Rigged.Knife_Rigged'"));
+		if(assetSkeletal.Succeeded())
+		{
+			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
+		}
+		
+	}
+
 }
 
 

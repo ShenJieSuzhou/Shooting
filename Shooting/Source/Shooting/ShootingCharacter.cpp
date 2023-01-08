@@ -90,17 +90,17 @@ void AShootingCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	if (WeaponClass != nullptr)
-	{
+	//if (WeaponClass != nullptr)
+	//{
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
 			FVector Localtion = FVector(0.f, 0.f, 0.f);
 			FRotator Rotator = FRotator(0.f);
-			AWeaponKnife* PrimaryWeapon = World->SpawnActor<AWeaponKnife>(WeaponClass, Localtion, Rotator);
+			PrimaryWeapon = World->SpawnActor<AWeaponKnife>(WeaponClass, Localtion, Rotator);
 			PrimaryWeapon->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
 		}
-	}
+	//}
 	
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
