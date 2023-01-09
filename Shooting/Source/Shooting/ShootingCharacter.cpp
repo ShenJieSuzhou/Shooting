@@ -99,24 +99,10 @@ void AShootingCharacter::BeginPlay()
 			FRotator Rotator = FRotator(0.f);
 			PrimaryWeapon = World->SpawnActor<AWeaponKnife>(WeaponClass, Localtion, Rotator);
 			PrimaryWeapon->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
+			CurrentWeapon = EWeapon::EW_Knife;
 		}
 	}
 	
-
-	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-
-	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	//if (bUsingMotionController
-	//{
-	//	VR_Gun->SetHiddenInGame(false, true);
-	//	Mesh1P->SetHiddenInGame(true, true);
-	//}
-	//else
-	//{
-	//	VR_Gun->SetHiddenInGame(true, true);
-	//	Mesh1P->SetHiddenInGame(false, true);
-	//}
 	Mesh1P->SetHiddenInGame(false, true);
 }
 
@@ -133,7 +119,7 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -153,54 +139,59 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AShootingCharacter::LookUpAtRate);
 }
 
-//void AShootingCharacter::OnFire()
-//{
-//	// try and fire a projectile
-//	if (ProjectileClass != nullptr)
-//	{
-//		UWorld* const World = GetWorld();
-//		if (World != nullptr)
-//		{
-//			if (bUsingMotionControllers)
-//			{
-//				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-//				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-//				World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-//			}
-//			else
-//			{
-//				const FRotator SpawnRotation = GetControlRotation();
-//				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-//				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
-//
-//				//Set Spawn Collision Handling Override
-//				FActorSpawnParameters ActorSpawnParams;
-//				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-//
-//				// spawn the projectile at the muzzle
-//				World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-//			}
-//		}
-//	}
-//
-//	// try and play the sound if specified
-//	if (FireSound != nullptr)
-//	{
-//		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-//	}
-//
-//	// try and play a firing animation if specified
-//	if (FireAnimation != nullptr)
-//	{
-//		// Get the animation object for the arms mesh
-//		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-//		if (AnimInstance != nullptr)
-//		{
-//			AnimInstance->Montage_Play(FireAnimation, 1.f);
-//		}
-//	}
-//}
-//
+void AShootingCharacter::OnFire()
+{
+	if(CurrentWeapon == EWeapon::EW_Knife)
+	{
+		// try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		// try and play a firing animation if specified
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
+		}
+	}
+	else
+	{
+		// try and fire a projectile
+		//if (ProjectileClass != nullptr)
+		//{
+		//	UWorld* const World = GetWorld();
+		//	if (World != nullptr)
+		//	{
+		//		if (bUsingMotionControllers)
+		//		{
+		//			const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+		//			const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+		//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+		//		}
+		//		else
+		//		{
+		//			const FRotator SpawnRotation = GetControlRotation();
+		//			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		//			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+		//			//Set Spawn Collision Handling Override
+		//			FActorSpawnParameters ActorSpawnParams;
+		//			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		//			// spawn the projectile at the muzzle
+		//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		//		}
+		//	}
+		//}
+	}
+}
+
 //void AShootingCharacter::OnResetVR()
 //{
 //	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();

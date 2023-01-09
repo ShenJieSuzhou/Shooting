@@ -16,6 +16,17 @@ class UMotionControllerComponent;
 class UAnimMontage;
 class USoundBase;
 
+UENUM()
+enum class EWeapon : uint8
+{
+	EW_Knife,
+	EW_AK,
+	EW_AWP,
+	EW_M1,
+	EW_Pisto
+};
+
+
 UCLASS(config=Game)
 class AShootingCharacter : public ACharacter
 {
@@ -95,10 +106,12 @@ public:
 
 	AWeaponKnife* PrimaryWeapon;
 
+	EWeapon CurrentWeapon;
+
 protected:
 	
-	///** Fires a projectile. */
-	//void OnFire();
+	/** Fires a projectile. */
+	void OnFire();
 
 	///** Resets HMD orientation and position in VR. */
 	//void OnResetVR();
