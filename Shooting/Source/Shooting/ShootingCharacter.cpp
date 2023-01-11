@@ -151,13 +151,18 @@ void AShootingCharacter::OnFire()
 
 		// try and play a firing animation if specified
 		// auto assetMontage = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-		const ConstructorHelpers::FObjectFinder<UAnimMontage> Combo1Finder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-		if (Combo1Finder.Succeeded())
-		{
-			FireAnimation = Combo1Finder.Object;
-		}
+		//const ConstructorHelpers::FObjectFinder<UAnimMontage> Combo1Finder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+		//if (Combo1Finder.Succeeded())
+		//{
+		//	FireAnimation = Combo1Finder.Object;
+		//}
 
-		
+		// Load static asset
+		FString knifeAttackMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *knifeAttackMontage));
+		FireAnimation = assetMontage;
+
+
 		//FireAnimation = assetMontage.Object;
 		if (FireAnimation != nullptr)
 		{
