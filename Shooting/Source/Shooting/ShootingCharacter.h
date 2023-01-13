@@ -99,6 +99,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	Bool WeaponChanged;
 
 	// Primary Weapon
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)

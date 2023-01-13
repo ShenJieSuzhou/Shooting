@@ -118,6 +118,11 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	// Bind Weapon Change Event
+	PlayerInputComponent->BindAction("WeaponChange1", IE_1, this, &AShootingCharacter::OnHoldRifle);
+	PlayerInputComponent->BindAction("WeaponChange2", IE_2, this, &AShootingCharacter::OnHoldPisto);
+
+
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
 
@@ -137,6 +142,17 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAxis("TurnRate", this, &AShootingCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AShootingCharacter::LookUpAtRate);
+}
+
+void AShootingCharacter::OnHoldRifle()
+{
+
+}
+
+
+void AShootingCharacter::OnHoldPisto()
+{
+
 }
 
 void AShootingCharacter::OnFire()
