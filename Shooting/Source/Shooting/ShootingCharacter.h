@@ -100,13 +100,18 @@ public:
 	uint8 bUsingMotionControllers : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	Bool WeaponChanged;
+	bool WeaponChanged;
 
-	// Primary Weapon
-	UPROPERTY(EditDefaultsOnly, Category = Weapon)
-	TSubclassOf<class AWeaponKnife> WeaponClass;
+	bool IsReloading;
 
-	AWeaponKnife* PrimaryWeapon;
+	// Weapon Rifle
+	AWeaponBase* WeaponRifle;
+
+	// Weapon Pisto
+	AWeaponBase* WeaponPisto;
+
+	// Weapon Knife
+	AWeaponBase* WeaponKnife;
 
 	EWeapon CurrentWeapon;
 
@@ -114,6 +119,16 @@ protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	// Weapon1
+	void OnHoldRifle();
+
+	// Weapon2
+	void OnHoldPisto();
+
+	// Weapon3
+	void OnHoldKnife();
+
 
 	///** Resets HMD orientation and position in VR. */
 	//void OnResetVR();
@@ -161,6 +176,9 @@ protected:
 	 * @returns true if touch controls were enabled.
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
+
+	// Init weapon
+	void SetWeapons();
 
 public:
 	/** Returns Mesh1P subobject **/

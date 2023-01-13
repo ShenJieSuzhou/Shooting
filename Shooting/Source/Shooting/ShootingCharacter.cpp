@@ -83,6 +83,12 @@ AShootingCharacter::AShootingCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	WeaponChanged = false;
+	IsReloading = false;
+
+	// Load Weapon
+	SetWeapons();
 }
 
 void AShootingCharacter::BeginPlay()
@@ -90,21 +96,45 @@ void AShootingCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	if (WeaponClass != nullptr)
-	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			FVector Localtion = FVector(0.f, 0.f, 0.f);
-			FRotator Rotator = FRotator(0.f);
-			PrimaryWeapon = World->SpawnActor<AWeaponKnife>(WeaponClass, Localtion, Rotator);
-			PrimaryWeapon->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
-			CurrentWeapon = EWeapon::EW_Knife;
-		}
-	}
-	
+	//UWorld* const World = GetWorld();
+	//if (World != nullptr)
+	//{
+	//	FVector Localtion = FVector(0.f, 0.f, 0.f);
+	//	FRotator Rotator = FRotator(0.f);
+	//	WeaponKnife = World->SpawnActor<AWeaponKnife>(WeaponKnife->GetClass(), Localtion, Rotator);
+	//	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
+	//	CurrentWeapon = EWeapon::EW_Knife;
+	//}
+
+	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
+	CurrentWeapon = EWeapon::EW_Knife;
 	Mesh1P->SetHiddenInGame(false, true);
 }
+
+void AShootingCharacter::SetWeapons()
+{
+	// Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'
+	// Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'
+	// Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'
+
+	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
+	UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
+	UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
+	UWorld* const World = GetWorld();
+	FVector Localtion = FVector(0.f, 0.f, 0.f);
+	FRotator Rotator = FRotator(0.f);
+	
+	if(WeaponKnifeClass != nullptr && WeaponRifleClass != nullptr && WeaponPistoClass != nullptr)
+	{
+		if(World != nullptr)
+		{
+			WeaponKnife = World->SpawnActor<AWeaponBase>(WeaponKnifeClass, Localtion, Rotator);
+			WeaponPisto = World->SpawnActor<AWeaponBase>(WeaponPistoClass, Localtion, Rotator);
+			WeaponRifle = World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator);
+		}
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -119,9 +149,9 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind Weapon Change Event
-	PlayerInputComponent->BindAction("WeaponChange1", IE_1, this, &AShootingCharacter::OnHoldRifle);
-	PlayerInputComponent->BindAction("WeaponChange2", IE_2, this, &AShootingCharacter::OnHoldPisto);
-
+	PlayerInputComponent->BindAction("HoldRifle", IE_Pressed, this, &AShootingCharacter::OnHoldRifle);
+	PlayerInputComponent->BindAction("HoldPisto", IE_Pressed, this, &AShootingCharacter::OnHoldPisto);
+	PlayerInputComponent->BindAction("HoldKnife", IE_Pressed, this, &AShootingCharacter::OnHoldKnife);
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
@@ -146,14 +176,29 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 void AShootingCharacter::OnHoldRifle()
 {
-
+	if(!IsReloading)
+	{
+		WeaponChanged = true;
+	}
 }
-
 
 void AShootingCharacter::OnHoldPisto()
 {
-
+	if (!IsReloading)
+	{
+		WeaponChanged = true;
+	}
 }
+
+void AShootingCharacter::OnHoldKnife()
+{
+	if (!IsReloading)
+	{
+		WeaponChanged = true;
+	}
+}
+
+
 
 void AShootingCharacter::OnFire()
 {
