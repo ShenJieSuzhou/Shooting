@@ -83,12 +83,6 @@ AShootingCharacter::AShootingCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
-
-	WeaponChanged = false;
-	IsReloading = false;
-
-	// Load Weapon
-	SetWeapons();
 }
 
 void AShootingCharacter::BeginPlay()
@@ -96,15 +90,8 @@ void AShootingCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	//UWorld* const World = GetWorld();
-	//if (World != nullptr)
-	//{
-	//	FVector Localtion = FVector(0.f, 0.f, 0.f);
-	//	FRotator Rotator = FRotator(0.f);
-	//	WeaponKnife = World->SpawnActor<AWeaponKnife>(WeaponKnife->GetClass(), Localtion, Rotator);
-	//	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
-	//	CurrentWeapon = EWeapon::EW_Knife;
-	//}
+	// Load Weapon
+	SetWeapons();
 
 	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
 	CurrentWeapon = EWeapon::EW_Knife;
@@ -113,9 +100,8 @@ void AShootingCharacter::BeginPlay()
 
 void AShootingCharacter::SetWeapons()
 {
-	// Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'
-	// Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'
-	// Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'
+	WeaponChanged = false;
+	IsReloading = false;
 
 	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
 	UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
