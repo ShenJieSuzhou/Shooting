@@ -191,7 +191,7 @@ void AShootingCharacter::OnHoldKnife()
 {
 	if (!IsReloading)
 	{
-		WeaponChanged = true;
+		WeaponChanged = false;
 		WeaponRifle->SetHidden(true);
 		WeaponPisto->SetHidden(true);
 		WeaponKnife->SetHidden(false);
