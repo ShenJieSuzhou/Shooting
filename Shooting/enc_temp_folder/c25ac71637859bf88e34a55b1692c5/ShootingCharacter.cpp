@@ -171,7 +171,6 @@ void AShootingCharacter::OnHoldRifle()
 		WeaponPisto->SetHidden(true);
 		WeaponKnife->SetHidden(true);
 		WeaponRifle->SetHidden(false);
-		CurrentWeapon = EWeapon::EW_AK;
 	}
 }
 
@@ -183,7 +182,6 @@ void AShootingCharacter::OnHoldPisto()
 		WeaponKnife->SetHidden(true);
 		WeaponRifle->SetHidden(true);
 		WeaponPisto->SetHidden(false);
-		CurrentWeapon = EWeapon::EW_Pisto;
 	}
 }
 
@@ -195,7 +193,6 @@ void AShootingCharacter::OnHoldKnife()
 		WeaponRifle->SetHidden(true);
 		WeaponPisto->SetHidden(true);
 		WeaponKnife->SetHidden(false);
-		CurrentWeapon = EWeapon::EW_Knife;
 	}
 }
 
