@@ -12,10 +12,8 @@ AWeaponKnife::AWeaponKnife()
 		if(assetSkeletal.Succeeded())
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
-		}
-		
+		}	
 	}
-
 }
 
 

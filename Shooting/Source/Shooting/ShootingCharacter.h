@@ -104,6 +104,9 @@ public:
 
 	bool IsReloading;
 
+	// Weapon Current
+	AWeaponBase* CurrentWeapon;
+
 	// Weapon Rifle
 	AWeaponBase* WeaponRifle;
 
@@ -113,7 +116,7 @@ public:
 	// Weapon Knife
 	AWeaponBase* WeaponKnife;
 
-	EWeapon CurrentWeapon;
+	//EWeapon CurrentWeapon;
 
 protected:
 	
