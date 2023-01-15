@@ -16,4 +16,8 @@ class SHOOTING_API AWeaponGlock : public AWeaponBase
 		
 public:
 	AWeaponGlock();
+
+	void OnFire();
+
+	void OnReload();
 };

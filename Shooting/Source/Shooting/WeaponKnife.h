@@ -16,4 +16,8 @@ class SHOOTING_API AWeaponKnife : public AWeaponBase
 		
 public:
 	AWeaponKnife();
+
+	void OnFire();
+
+	void OnReload();
 };

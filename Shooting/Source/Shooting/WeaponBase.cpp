@@ -37,10 +37,3 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-
-void AWeaponBase::OnFire()
-{
-	
-
-}

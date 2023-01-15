@@ -16,4 +16,14 @@ AWeaponKnife::AWeaponKnife()
 	}
 }
 
+void AWeaponKnife::OnFire()
+{
+
+}
+
+void AWeaponKnife::OnReload()
+{
+
+}
+
 

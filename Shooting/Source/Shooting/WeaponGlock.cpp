@@ -25,4 +25,16 @@ AWeaponGlock::AWeaponGlock()
 	ReloadTime = 1.5;
 }
 
+void AWeaponGlock::OnFire()
+{
+	
+}
+
+void AWeaponGlock::OnReload()
+{
+
+}
+
+
+
 

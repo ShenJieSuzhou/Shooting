@@ -26,3 +26,12 @@ AWeaponAK::AWeaponAK()
 }
 
 
+void AWeaponAK::OnFire()
+{
+
+}
+
+void AWeaponAK::OnReload()
+{
+	
+}

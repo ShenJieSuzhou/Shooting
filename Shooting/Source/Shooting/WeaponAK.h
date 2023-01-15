@@ -16,4 +16,8 @@ class SHOOTING_API AWeaponAK : public AWeaponBase
 		
 public:
 	AWeaponAK();
+
+	void OnFire();
+
+	void OnReload();
 };
