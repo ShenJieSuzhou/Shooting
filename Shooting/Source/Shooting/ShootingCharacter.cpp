@@ -92,18 +92,19 @@ void AShootingCharacter::BeginPlay()
 	
 	// Load Weapon
 	SetWeapons();
-	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
-	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
-	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponSlot"));
-	CurrentWeapon = EWeapon::EW_Knife;
+	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	CurrentWeapon = EWeapon::EW_AK;
 	Mesh1P->SetHiddenInGame(false, true);
-	WeaponRifle->SetHidden(true);
-	WeaponPisto->SetHidden(true);
+	WeaponRifle->FP_Gun->SetHiddenInGame(false);
+	WeaponPisto->FP_Gun->SetHiddenInGame(true);
+	WeaponKnife->FP_Gun->SetHiddenInGame(true);
 }
 
 void AShootingCharacter::SetWeapons()
 {
-	WeaponChanged = false;
+	WeaponChanged = true;
 	IsReloading = false;
 
 	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
@@ -117,7 +118,7 @@ void AShootingCharacter::SetWeapons()
 	{
 		if(World != nullptr)
 		{
-			WeaponKnife = World->SpawnActor<AWeaponBase>(WeaponKnifeClass, Localtion, Rotator);
+			WeaponKnife = World->SpawnActor<AWeaponBase>(WeaponKnifeClass, FVector(8.9f, 2.0f, -2.7f), Rotator);
 			WeaponPisto = World->SpawnActor<AWeaponBase>(WeaponPistoClass, Localtion, Rotator);
 			WeaponRifle = World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator);
 		}
@@ -168,9 +169,13 @@ void AShootingCharacter::OnHoldRifle()
 	if(!IsReloading)
 	{
 		WeaponChanged = true;
-		WeaponPisto->SetHidden(true);
-		WeaponKnife->SetHidden(true);
-		WeaponRifle->SetHidden(false);
+		//WeaponPisto->SetHidden(true);
+		//WeaponKnife->SetHidden(true);
+		//WeaponRifle->SetHidden(false);
+
+		WeaponRifle->FP_Gun->SetHiddenInGame(false);
+		WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		WeaponKnife->FP_Gun->SetHiddenInGame(true);
 		CurrentWeapon = EWeapon::EW_AK;
 	}
 }
@@ -192,9 +197,9 @@ void AShootingCharacter::OnHoldKnife()
 	if (!IsReloading)
 	{
 		WeaponChanged = false;
-		WeaponRifle->SetHidden(true);
-		WeaponPisto->SetHidden(true);
-		WeaponKnife->SetHidden(false);
+		WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		WeaponKnife->FP_Gun->SetHiddenInGame(false);
 		CurrentWeapon = EWeapon::EW_Knife;
 	}
 }
