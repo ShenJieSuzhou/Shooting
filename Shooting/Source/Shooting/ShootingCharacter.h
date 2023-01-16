@@ -116,7 +116,7 @@ public:
 	// Weapon Knife
 	AWeaponBase* WeaponKnife;
 
-	//EWeapon CurrentWeapon;
+	EWeapon CurWeaponType;
 
 protected:
 	

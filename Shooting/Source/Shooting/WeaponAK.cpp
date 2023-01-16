@@ -28,10 +28,10 @@ AWeaponAK::AWeaponAK()
 
 void AWeaponAK::OnFire()
 {
-
+	// Play Montage
 }
 
 void AWeaponAK::OnReload()
 {
-	
+	// Play Animation
 }

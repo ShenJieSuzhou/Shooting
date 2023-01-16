@@ -95,7 +95,7 @@ void AShootingCharacter::BeginPlay()
 	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-	//CurrentWeapon = EWeapon::EW_AK;
+	CurWeaponType = EWeapon::EW_AK;
 	Mesh1P->SetHiddenInGame(false, true);
 	WeaponRifle->FP_Gun->SetHiddenInGame(false);
 	WeaponPisto->FP_Gun->SetHiddenInGame(true);
@@ -106,10 +106,18 @@ void AShootingCharacter::SetWeapons()
 {
 	WeaponChanged = true;
 	IsReloading = false;
+	// Class'/Script/Shooting.WeaponAK'
+	// Class'/Script/Shooting.WeaponGlock'
+	// Class'/Script/Shooting.WeaponKnife'
+	//UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
+	//UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
+	//UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
 
-	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
-	UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
-	UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
+	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponKnife'"));
+	UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponAK'"));
+	UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponGlock'"));
+
+
 	UWorld* const World = GetWorld();
 	FVector Localtion = FVector(0.f, 0.f, 0.f);
 	FRotator Rotator = FRotator(0.f);
@@ -176,7 +184,7 @@ void AShootingCharacter::OnHoldRifle()
 		WeaponRifle->FP_Gun->SetHiddenInGame(false);
 		WeaponPisto->FP_Gun->SetHiddenInGame(true);
 		WeaponKnife->FP_Gun->SetHiddenInGame(true);
-		//CurrentWeapon = EWeapon::EW_AK;
+		CurWeaponType = EWeapon::EW_AK;
 	}
 }
 
@@ -188,7 +196,7 @@ void AShootingCharacter::OnHoldPisto()
 		WeaponKnife->SetHidden(true);
 		WeaponRifle->SetHidden(true);
 		WeaponPisto->SetHidden(false);
-		//CurrentWeapon = EWeapon::EW_Pisto;
+		CurWeaponType = EWeapon::EW_Pisto;
 	}
 }
 
@@ -200,7 +208,7 @@ void AShootingCharacter::OnHoldKnife()
 		WeaponRifle->FP_Gun->SetHiddenInGame(true);
 		WeaponPisto->FP_Gun->SetHiddenInGame(true);
 		WeaponKnife->FP_Gun->SetHiddenInGame(false);
-		//CurrentWeapon = EWeapon::EW_Knife;
+		CurWeaponType = EWeapon::EW_Knife;
 	}
 }
 
@@ -208,69 +216,69 @@ void AShootingCharacter::OnHoldKnife()
 
 void AShootingCharacter::OnFire()
 {
-	//if(CurrentWeapon == EWeapon::EW_Knife)
-	//{
-	//	// try and play the sound if specified
-	//	if (FireSound != nullptr)
-	//	{
-	//		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	//	}
+	if(CurWeaponType == EWeapon::EW_Knife)
+	{
+		// try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
 
-	//	// try and play a firing animation if specified
-	//	// auto assetMontage = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-	//	//const ConstructorHelpers::FObjectFinder<UAnimMontage> Combo1Finder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-	//	//if (Combo1Finder.Succeeded())
-	//	//{
-	//	//	FireAnimation = Combo1Finder.Object;
-	//	//}
+		// try and play a firing animation if specified
+		// auto assetMontage = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+		//const ConstructorHelpers::FObjectFinder<UAnimMontage> Combo1Finder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+		//if (Combo1Finder.Succeeded())
+		//{
+		//	FireAnimation = Combo1Finder.Object;
+		//}
 
-	//	// Load static asset
-	//	FString knifeAttackMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-	//	UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *knifeAttackMontage));
-	//	FireAnimation = assetMontage;
+		// Load static asset
+		FString knifeAttackMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *knifeAttackMontage));
+		FireAnimation = assetMontage;
 
 
-	//	//FireAnimation = assetMontage.Object;
-	//	if (FireAnimation != nullptr)
-	//	{
-	//		// Get the animation object for the arms mesh
-	//		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-	//		if (AnimInstance != nullptr)
-	//		{
-	//			AnimInstance->Montage_Play(FireAnimation, 1.f);
-	//		}
-	//	}
-	//}
-	//else
-	//{
-	//	// try and fire a projectile
-	//	//if (ProjectileClass != nullptr)
-	//	//{
-	//	//	UWorld* const World = GetWorld();
-	//	//	if (World != nullptr)
-	//	//	{
-	//	//		if (bUsingMotionControllers)
-	//	//		{
-	//	//			const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-	//	//			const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-	//	//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-	//	//		}
-	//	//		else
-	//	//		{
-	//	//			const FRotator SpawnRotation = GetControlRotation();
-	//	//			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-	//	//			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+		//FireAnimation = assetMontage.Object;
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
+		}
+	}
+	else
+	{
+		// try and fire a projectile
+		//if (ProjectileClass != nullptr)
+		//{
+		//	UWorld* const World = GetWorld();
+		//	if (World != nullptr)
+		//	{
+		//		if (bUsingMotionControllers)
+		//		{
+		//			const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+		//			const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+		//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+		//		}
+		//		else
+		//		{
+		//			const FRotator SpawnRotation = GetControlRotation();
+		//			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		//			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
-	//	//			//Set Spawn Collision Handling Override
-	//	//			FActorSpawnParameters ActorSpawnParams;
-	//	//			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		//			//Set Spawn Collision Handling Override
+		//			FActorSpawnParameters ActorSpawnParams;
+		//			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-	//	//			// spawn the projectile at the muzzle
-	//	//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-	//	//		}
-	//	//	}
-	//	//}
-	//}
+		//			// spawn the projectile at the muzzle
+		//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		//		}
+		//	}
+		//}
+	}
 }
 
 //void AShootingCharacter::OnResetVR()
