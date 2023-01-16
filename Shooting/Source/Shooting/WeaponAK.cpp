@@ -29,7 +29,7 @@ AWeaponAK::AWeaponAK()
 void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 {
 	// Load static asset
-	FString AkFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_ADS_Fire_anim_Montage.Arms_AK_ADS_Fire_anim_Montage'"));
+	FString AkFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim_Montage.Arms_AK_Fire_anim_Montage'"));
 	UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *AkFireMontage));
 	FireAnimation = assetMontage;
 
