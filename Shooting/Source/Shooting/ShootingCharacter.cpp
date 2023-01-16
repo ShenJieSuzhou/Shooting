@@ -95,7 +95,10 @@ void AShootingCharacter::BeginPlay()
 	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	
+	CurrentWeapon = WeaponRifle;
 	CurWeaponType = EWeapon::EW_AK;
+
 	Mesh1P->SetHiddenInGame(false, true);
 	WeaponRifle->FP_Gun->SetHiddenInGame(false);
 	WeaponPisto->FP_Gun->SetHiddenInGame(true);
@@ -106,9 +109,7 @@ void AShootingCharacter::SetWeapons()
 {
 	WeaponChanged = true;
 	IsReloading = false;
-	// Class'/Script/Shooting.WeaponAK'
-	// Class'/Script/Shooting.WeaponGlock'
-	// Class'/Script/Shooting.WeaponKnife'
+	//Blueprint
 	//UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
 	//UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
 	//UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
@@ -116,7 +117,6 @@ void AShootingCharacter::SetWeapons()
 	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponKnife'"));
 	UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponAK'"));
 	UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponGlock'"));
-
 
 	UWorld* const World = GetWorld();
 	FVector Localtion = FVector(0.f, 0.f, 0.f);
@@ -126,9 +126,9 @@ void AShootingCharacter::SetWeapons()
 	{
 		if(World != nullptr)
 		{
-			WeaponKnife = World->SpawnActor<AWeaponBase>(WeaponKnifeClass, FVector(8.9f, 2.0f, -2.7f), Rotator);
-			WeaponPisto = World->SpawnActor<AWeaponBase>(WeaponPistoClass, Localtion, Rotator);
-			WeaponRifle = World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator);
+			WeaponKnife = Cast<AWeaponKnife>(World->SpawnActor<AWeaponBase>(WeaponKnifeClass, FVector(8.9f, 2.0f, -2.7f), Rotator));
+			WeaponPisto = Cast<AWeaponGlock>(World->SpawnActor<AWeaponBase>(WeaponPistoClass, Localtion, Rotator));
+			WeaponRifle = Cast<AWeaponAK>(World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator));
 		}
 	}
 }
@@ -177,9 +177,7 @@ void AShootingCharacter::OnHoldRifle()
 	if(!IsReloading)
 	{
 		WeaponChanged = true;
-		//WeaponPisto->SetHidden(true);
-		//WeaponKnife->SetHidden(true);
-		//WeaponRifle->SetHidden(false);
+		CurrentWeapon = WeaponRifle;
 
 		WeaponRifle->FP_Gun->SetHiddenInGame(false);
 		WeaponPisto->FP_Gun->SetHiddenInGame(true);
@@ -193,6 +191,8 @@ void AShootingCharacter::OnHoldPisto()
 	if (!IsReloading)
 	{
 		WeaponChanged = true;
+		CurrentWeapon = WeaponPisto;
+
 		WeaponKnife->SetHidden(true);
 		WeaponRifle->SetHidden(true);
 		WeaponPisto->SetHidden(false);
@@ -205,6 +205,8 @@ void AShootingCharacter::OnHoldKnife()
 	if (!IsReloading)
 	{
 		WeaponChanged = false;
+		CurrentWeapon = WeaponKnife;
+
 		WeaponRifle->FP_Gun->SetHiddenInGame(true);
 		WeaponPisto->FP_Gun->SetHiddenInGame(true);
 		WeaponKnife->FP_Gun->SetHiddenInGame(false);
@@ -219,10 +221,10 @@ void AShootingCharacter::OnFire()
 	if(CurWeaponType == EWeapon::EW_Knife)
 	{
 		// try and play the sound if specified
-		if (FireSound != nullptr)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		}
+		//if (FireSound != nullptr)
+		//{
+		//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		//}
 
 		// try and play a firing animation if specified
 		// auto assetMontage = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
@@ -232,25 +234,11 @@ void AShootingCharacter::OnFire()
 		//	FireAnimation = Combo1Finder.Object;
 		//}
 
-		// Load static asset
-		FString knifeAttackMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *knifeAttackMontage));
-		FireAnimation = assetMontage;
-
-
-		//FireAnimation = assetMontage.Object;
-		if (FireAnimation != nullptr)
-		{
-			// Get the animation object for the arms mesh
-			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-			if (AnimInstance != nullptr)
-			{
-				AnimInstance->Montage_Play(FireAnimation, 1.f);
-			}
-		}
+		WeaponKnife->OnFire(Mesh1P);
 	}
-	else
+	else if(CurWeaponType == EWeapon::EW_AK)
 	{
+		WeaponRifle->OnFire(Mesh1P);
 		// try and fire a projectile
 		//if (ProjectileClass != nullptr)
 		//{
@@ -279,6 +267,15 @@ void AShootingCharacter::OnFire()
 		//	}
 		//}
 	}
+	else if(CurWeaponType == EWeapon::EW_Pisto)
+	{
+		WeaponPisto->OnFire(Mesh1P);
+	}
+}
+
+void AShootingCharacter::OnReload()
+{
+
 }
 
 //void AShootingCharacter::OnResetVR()

@@ -25,12 +25,12 @@ AWeaponGlock::AWeaponGlock()
 	ReloadTime = 1.5;
 }
 
-void AWeaponGlock::OnFire()
+void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh)
 {
 	
 }
 
-void AWeaponGlock::OnReload()
+void AWeaponGlock::OnReload(USkeletalMeshComponent* SkMesh)
 {
 
 }

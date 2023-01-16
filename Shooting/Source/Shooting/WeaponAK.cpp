@@ -26,12 +26,12 @@ AWeaponAK::AWeaponAK()
 }
 
 
-void AWeaponAK::OnFire()
+void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 {
 	// Play Montage
 }
 
-void AWeaponAK::OnReload()
+void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 {
 	// Play Animation
 }

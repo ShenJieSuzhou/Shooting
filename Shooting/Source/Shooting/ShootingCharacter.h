@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "WeaponKnife.h"
+#include "WeaponAK.h"
+#include "WeaponGlock.h"
 #include "WeaponBase.h"
 #include "ShootingCharacter.generated.h"
 
@@ -108,13 +110,13 @@ public:
 	AWeaponBase* CurrentWeapon;
 
 	// Weapon Rifle
-	AWeaponBase* WeaponRifle;
+	AWeaponAK* WeaponRifle;
 
 	// Weapon Pisto
-	AWeaponBase* WeaponPisto;
+	AWeaponGlock* WeaponPisto;
 
 	// Weapon Knife
-	AWeaponBase* WeaponKnife;
+	AWeaponKnife* WeaponKnife;
 
 	EWeapon CurWeaponType;
 
@@ -122,6 +124,8 @@ protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	void OnReload();
 
 	// Weapon1
 	void OnHoldRifle();

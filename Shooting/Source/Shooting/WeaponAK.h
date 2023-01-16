@@ -6,6 +6,7 @@
 #include "WeaponBase.h"
 #include "WeaponAK.generated.h"
 
+class USkeletalMeshComponent;
 /**
  * 
  */
@@ -17,7 +18,7 @@ class SHOOTING_API AWeaponAK : public AWeaponBase
 public:
 	AWeaponAK();
 
-	void OnFire();
+	void OnFire(USkeletalMeshComponent* SkMesh);
 
-	void OnReload();
+	void OnReload(USkeletalMeshComponent* SkMesh);
 };
