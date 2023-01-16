@@ -22,7 +22,7 @@ AWeaponAK::AWeaponAK()
 	// 子弹精度
 	BulletSpread = 0.7;
 	// 装弹时间
-	ReloadTime = 2;
+	ReloadTime = 0.2;
 }
 
 
@@ -41,7 +41,6 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 {
-	// Play Animation
 	// 重新计算子弹数量
 	// 如果子弹小于一个弹夹就不换弹
 	if(MaxAmmoCount < 30)
@@ -53,6 +52,20 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 
 	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
 	AmmoCount = 30;
+
+	// Play Animation
+
+	// Load static asset
+	FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AK_Reload_anim.AK_Reload_anim'"));
+	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
+
+	if (assetAnim != nullptr)
+	{
+		SkMesh->PlayAnimation(assetAnim, false);
+	}
+
+	/*FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UObject::MethodWithDelay, 3, false);*/
 }
 
 bool AWeaponAK::OnCheckAmmo()

@@ -150,6 +150,7 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("HoldRifle", IE_Pressed, this, &AShootingCharacter::OnHoldRifle);
 	PlayerInputComponent->BindAction("HoldPisto", IE_Pressed, this, &AShootingCharacter::OnHoldPisto);
 	PlayerInputComponent->BindAction("HoldKnife", IE_Pressed, this, &AShootingCharacter::OnHoldKnife);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AShootingCharacter::OnReload);
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
@@ -214,8 +215,6 @@ void AShootingCharacter::OnHoldKnife()
 	}
 }
 
-
-
 void AShootingCharacter::OnFire()
 {
 	if(CurWeaponType == EWeapon::EW_Knife)
@@ -230,9 +229,8 @@ void AShootingCharacter::OnFire()
 		}
 		else
 		{
-			// 提示弹药不足
+			OnReload();
 		}
-
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
@@ -243,20 +241,55 @@ void AShootingCharacter::OnFire()
 		}
 		else
 		{
-			// 提示弹药不足
+			OnReload();
 		}
 	}
 }
 
 void AShootingCharacter::OnReload()
 {
+	if (CurWeaponType == EWeapon::EW_Knife)
+	{
+		
+	}
+	else if (CurWeaponType == EWeapon::EW_AK)
+	{
+		if(WeaponRifle->MaxAmmoCount != 0)
+		{
+			IsReloading = true;
+			FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
+			UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsAKReloadMontage));
+			if (assetMontage != nullptr)
+			{
+				// Get the animation object for the arms mesh
+				UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+				if (AnimInstance != nullptr)
+				{
+					AnimInstance->Montage_Play(assetMontage, 1.f);
+				}
+			}
 
+			WeaponRifle->OnReload(Mesh1P);
+		}
+		else
+		{
+			// 提示弹药不足
+		}
+	}
+	else if (CurWeaponType == EWeapon::EW_Pisto)
+	{
+		if(WeaponPisto->MaxAmmoCount != 0)
+		{
+			IsReloading = true;
+			WeaponPisto->OnReload(Mesh1P);
+		}
+		else
+		{
+			// 提示弹药不足
+		}
+	}
 }
 
-//void AShootingCharacter::OnResetVR()
-//{
-//	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-//}
 
 void AShootingCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
