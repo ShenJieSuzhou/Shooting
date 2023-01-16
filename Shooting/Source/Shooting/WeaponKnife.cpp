@@ -33,6 +33,20 @@ void AWeaponKnife::OnFire(USkeletalMeshComponent* SkMesh)
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+
+	// try and play the sound if specified
+//if (FireSound != nullptr)
+//{
+//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+//}
+
+// try and play a firing animation if specified
+// auto assetMontage = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+//const ConstructorHelpers::FObjectFinder<UAnimMontage> Combo1Finder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
+//if (Combo1Finder.Succeeded())
+//{
+//	FireAnimation = Combo1Finder.Object;
+//}
 }
 
 void AWeaponKnife::OnReload(USkeletalMeshComponent* SkMesh)

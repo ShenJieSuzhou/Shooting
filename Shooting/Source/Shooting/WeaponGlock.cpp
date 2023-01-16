@@ -35,6 +35,9 @@ void AWeaponGlock::OnReload(USkeletalMeshComponent* SkMesh)
 
 }
 
-
+bool AWeaponGlock::OnCheckAmmo()
+{
+	return false;
+}
 
 

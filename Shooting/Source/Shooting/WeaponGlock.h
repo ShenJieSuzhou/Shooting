@@ -22,4 +22,6 @@ public:
 	void OnFire(USkeletalMeshComponent* SkMesh);
 
 	void OnReload(USkeletalMeshComponent* SkMesh);
+
+	bool OnCheckAmmo();
 };

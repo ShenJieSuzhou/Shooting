@@ -28,10 +28,48 @@ AWeaponAK::AWeaponAK()
 
 void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 {
-	// Play Montage
+	// Load static asset
+	FString AkFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_ADS_Fire_anim_Montage.Arms_AK_ADS_Fire_anim_Montage'"));
+	UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *AkFireMontage));
+	FireAnimation = assetMontage;
+
+	//FireAnimation = assetMontage.Object;
+	if (FireAnimation != nullptr)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
+	}
+	//AmmoCount--;
 }
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 {
 	// Play Animation
+	// 重新计算子弹数量
+	// 如果子弹小于一个弹夹就不换弹
+	if(MaxAmmoCount < 30)
+	{
+		AmmoCount = MaxAmmoCount;
+		MaxAmmoCount = 0;
+		return;
+	}
+
+	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
+	AmmoCount = 30;
+	
+
+}
+
+bool AWeaponAK::OnCheckAmmo()
+{
+	if(AmmoCount <= 0)
+	{
+		return false;
+	}
+
+	return true;
 }

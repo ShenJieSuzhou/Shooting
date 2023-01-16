@@ -220,56 +220,31 @@ void AShootingCharacter::OnFire()
 {
 	if(CurWeaponType == EWeapon::EW_Knife)
 	{
-		// try and play the sound if specified
-		//if (FireSound != nullptr)
-		//{
-		//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		//}
-
-		// try and play a firing animation if specified
-		// auto assetMontage = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-		//const ConstructorHelpers::FObjectFinder<UAnimMontage> Combo1Finder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Knife_Attack_01_anim_Montage.Arms_Knife_Attack_01_anim_Montage'"));
-		//if (Combo1Finder.Succeeded())
-		//{
-		//	FireAnimation = Combo1Finder.Object;
-		//}
-
 		WeaponKnife->OnFire(Mesh1P);
 	}
 	else if(CurWeaponType == EWeapon::EW_AK)
 	{
-		WeaponRifle->OnFire(Mesh1P);
-		// try and fire a projectile
-		//if (ProjectileClass != nullptr)
-		//{
-		//	UWorld* const World = GetWorld();
-		//	if (World != nullptr)
-		//	{
-		//		if (bUsingMotionControllers)
-		//		{
-		//			const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-		//			const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-		//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-		//		}
-		//		else
-		//		{
-		//			const FRotator SpawnRotation = GetControlRotation();
-		//			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-		//			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+		if(WeaponRifle->OnCheckAmmo())
+		{
+			WeaponRifle->OnFire(Mesh1P);
+		}
+		else
+		{
+			// 提示弹药不足
+		}
 
-		//			//Set Spawn Collision Handling Override
-		//			FActorSpawnParameters ActorSpawnParams;
-		//			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-		//			// spawn the projectile at the muzzle
-		//			World->SpawnActor<AShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		//		}
-		//	}
-		//}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
 		WeaponPisto->OnFire(Mesh1P);
+		if (WeaponPisto->OnCheckAmmo())
+		{
+			WeaponPisto->OnFire(Mesh1P);
+		}
+		else
+		{
+			// 提示弹药不足
+		}
 	}
 }
 
