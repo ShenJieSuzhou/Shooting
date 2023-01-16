@@ -256,20 +256,32 @@ void AShootingCharacter::OnReload()
 	{
 		if(WeaponRifle->MaxAmmoCount != 0)
 		{
-			IsReloading = true;
-			FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
-			UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsAKReloadMontage));
-			if (assetMontage != nullptr)
-			{
-				// Get the animation object for the arms mesh
-				UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-				if (AnimInstance != nullptr)
-				{
-					AnimInstance->Montage_Play(assetMontage, 1.f);
-				}
-			}
+			IsReloading = true;		
+			//WeaponRifle->OnReload(Mesh1P);
 
-			WeaponRifle->OnReload(Mesh1P);
+			// Load static asset
+			FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
+			UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
+
+			if (assetAnim != nullptr)
+			{
+				Mesh1P->PlayAnimation(assetAnim, false);
+			}
+			
+			//AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'
+			//FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
+			//UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsAKReloadMontage));
+			//if (assetMontage != nullptr)
+			//{
+			//	// Get the animation object for the arms mesh
+			//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			//	if (AnimInstance != nullptr)
+			//	{
+			//		AnimInstance->Montage_Play(assetMontage, 1.f);
+			//	}
+			//}
+
+			
 		}
 		else
 		{
