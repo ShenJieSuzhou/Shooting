@@ -262,13 +262,13 @@ void AShootingCharacter::OnReload()
 				IsReloading = true;
 				doOnce = true;
 				// Load static asset
-				//FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
-				//UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
+				FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
+				UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
 
-				//if (assetAnim != nullptr)
-				//{
-				//	Mesh1P->PlayAnimation(assetAnim, false);
-				//}
+				if (assetAnim != nullptr)
+				{
+					Mesh1P->PlayAnimation(assetAnim, false);
+				}
 
 				//AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'
 				//FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
@@ -283,18 +283,19 @@ void AShootingCharacter::OnReload()
 				//	}
 				//}
 
-				//WeaponRifle->OnReload(Mesh1P);
+				WeaponRifle->OnReload(Mesh1P);
 
 				// 创建一个LatentInfo, 用不到Linkage直接传0(不能是-1)， UUID随机生成，指定延迟后要执行的函数ExecutionFunction，ExecutionFunction的归属者this
-				FLatentActionInfo LatentInfo;
+				/*FLatentActionInfo LatentInfo;
 				LatentInfo.Linkage = 0;
 				LatentInfo.CallbackTarget = this;
 				LatentInfo.ExecutionFunction = "ReloadAmmo";
 				LatentInfo.UUID = __LINE__;
-				UKismetSystemLibrary::Delay(GetWorld(), 10.0f, LatentInfo);
+				UKismetSystemLibrary::Delay(this, 3.0f, LatentInfo);
 				FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
-				UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
-
+				UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));*/
+				IsReloading = false;
+				doOnce = false;
 			}
 		}
 		else
@@ -320,6 +321,7 @@ void AShootingCharacter::ReloadAmmo()
 {
 	IsReloading = false;
 	doOnce = false;
+	UKismetSystemLibrary::PrintString(this, TEXT("DelayFromCpp: 3s"));
 	//清除计时器TimerHandle
 	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }

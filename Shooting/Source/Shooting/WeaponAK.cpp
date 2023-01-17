@@ -60,11 +60,8 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 
 	if (assetAnim != nullptr)
 	{
-		SkMesh->PlayAnimation(assetAnim, false);
+		FP_Gun->PlayAnimation(assetAnim, false);
 	}
-
-	const FLatentActionInfo LatentInfo(0, FMath::Rand(), TEXT("SetAmmo"), this);
-	UKismetSystemLibrary::Delay(this, 2.0f, LatentInfo);
 }
 
 bool AWeaponAK::OnCheckAmmo()
