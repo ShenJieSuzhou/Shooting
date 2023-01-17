@@ -8,6 +8,7 @@
 #include "WeaponAK.h"
 #include "WeaponGlock.h"
 #include "WeaponBase.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "ShootingCharacter.generated.h"
 
 class UInputComponent;
@@ -120,6 +121,10 @@ public:
 
 	EWeapon CurWeaponType;
 
+	FTimerHandle TimerHandle;
+
+	bool doOnce;
+
 protected:
 	
 	/** Fires a projectile. */
@@ -191,5 +196,8 @@ public:
 
 	// Init weapon
 	void SetWeapons();
+
+	UFUNCTION()
+	void ReloadAmmo();
 };
 

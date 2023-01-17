@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "WeaponAK.generated.h"
 
 class USkeletalMeshComponent;
@@ -23,4 +24,9 @@ public:
 	void OnReload(USkeletalMeshComponent* SkMesh);
 
 	bool OnCheckAmmo();
+
+	void SetAmmo();
+
+public:
+	FTimerHandle TimerHandle;
 };

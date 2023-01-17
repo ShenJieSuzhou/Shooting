@@ -22,7 +22,7 @@ AWeaponAK::AWeaponAK()
 	// 子弹精度
 	BulletSpread = 0.7;
 	// 装弹时间
-	ReloadTime = 0.2;
+	ReloadTime = 2.0;
 }
 
 
@@ -51,7 +51,6 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 	}
 
 	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
-	AmmoCount = 30;
 
 	// Play Animation
 
@@ -64,8 +63,8 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 		SkMesh->PlayAnimation(assetAnim, false);
 	}
 
-	/*FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UObject::MethodWithDelay, 3, false);*/
+	const FLatentActionInfo LatentInfo(0, FMath::Rand(), TEXT("SetAmmo"), this);
+	UKismetSystemLibrary::Delay(this, 2.0f, LatentInfo);
 }
 
 bool AWeaponAK::OnCheckAmmo()
@@ -76,4 +75,10 @@ bool AWeaponAK::OnCheckAmmo()
 	}
 
 	return true;
+}
+void AWeaponAK::SetAmmo()
+{
+	AmmoCount = 30;
+	//清除计时器TimerHandle
+	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }

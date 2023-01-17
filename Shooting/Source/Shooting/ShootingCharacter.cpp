@@ -92,6 +92,9 @@ void AShootingCharacter::BeginPlay()
 	
 	// Load Weapon
 	SetWeapons();
+	doOnce = false;
+	WeaponChanged = true;
+	IsReloading = false;
 	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
@@ -107,8 +110,6 @@ void AShootingCharacter::BeginPlay()
 
 void AShootingCharacter::SetWeapons()
 {
-	WeaponChanged = true;
-	IsReloading = false;
 	//Blueprint
 	//UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
 	//UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
@@ -256,32 +257,45 @@ void AShootingCharacter::OnReload()
 	{
 		if(WeaponRifle->MaxAmmoCount != 0)
 		{
-			IsReloading = true;		
-			//WeaponRifle->OnReload(Mesh1P);
-
-			// Load static asset
-			FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
-			UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
-
-			if (assetAnim != nullptr)
+			if(!doOnce)
 			{
-				Mesh1P->PlayAnimation(assetAnim, false);
-			}
-			
-			//AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'
-			//FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
-			//UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsAKReloadMontage));
-			//if (assetMontage != nullptr)
-			//{
-			//	// Get the animation object for the arms mesh
-			//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-			//	if (AnimInstance != nullptr)
-			//	{
-			//		AnimInstance->Montage_Play(assetMontage, 1.f);
-			//	}
-			//}
+				IsReloading = true;
+				doOnce = true;
+				// Load static asset
+				//FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
+				//UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
 
-			
+				//if (assetAnim != nullptr)
+				//{
+				//	Mesh1P->PlayAnimation(assetAnim, false);
+				//}
+
+				//AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'
+				//FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
+				//UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsAKReloadMontage));
+				//if (assetMontage != nullptr)
+				//{
+				//	// Get the animation object for the arms mesh
+				//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+				//	if (AnimInstance != nullptr)
+				//	{
+				//		AnimInstance->Montage_Play(assetMontage, 1.f);
+				//	}
+				//}
+
+				//WeaponRifle->OnReload(Mesh1P);
+
+				// 创建一个LatentInfo, 用不到Linkage直接传0(不能是-1)， UUID随机生成，指定延迟后要执行的函数ExecutionFunction，ExecutionFunction的归属者this
+				FLatentActionInfo LatentInfo;
+				LatentInfo.Linkage = 0;
+				LatentInfo.CallbackTarget = this;
+				LatentInfo.ExecutionFunction = "ReloadAmmo";
+				LatentInfo.UUID = __LINE__;
+				UKismetSystemLibrary::Delay(GetWorld(), 10.0f, LatentInfo);
+				FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
+				UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
+
+			}
 		}
 		else
 		{
@@ -300,6 +314,14 @@ void AShootingCharacter::OnReload()
 			// 提示弹药不足
 		}
 	}
+}
+
+void AShootingCharacter::ReloadAmmo()
+{
+	IsReloading = false;
+	doOnce = false;
+	//清除计时器TimerHandle
+	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }
 
 
