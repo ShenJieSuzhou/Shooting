@@ -224,26 +224,31 @@ void AShootingCharacter::OnFire()
 	}
 	else if(CurWeaponType == EWeapon::EW_AK)
 	{
-		if(WeaponRifle->OnCheckAmmo())
+		if(IsReloading)
 		{
-			WeaponRifle->OnFire(Mesh1P);
-		}
-		else
-		{
-			OnReload();
+			if (WeaponRifle->OnCheckAmmo())
+			{
+				WeaponRifle->OnFire(Mesh1P);
+			}
+			else
+			{
+				OnReload();
+			}
 		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
-		WeaponPisto->OnFire(Mesh1P);
-		if (WeaponPisto->OnCheckAmmo())
+		if (IsReloading)
 		{
-			WeaponPisto->OnFire(Mesh1P);
-		}
-		else
-		{
-			OnReload();
-		}
+			if (WeaponPisto->OnCheckAmmo())
+			{
+				WeaponPisto->OnFire(Mesh1P);
+			}
+			else
+			{
+				OnReload();
+			}
+		}	
 	}
 }
 
@@ -261,6 +266,7 @@ void AShootingCharacter::OnReload()
 			{
 				IsReloading = true;
 				doOnce = true;
+
 				// Load static asset
 				FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
 				UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
@@ -284,16 +290,6 @@ void AShootingCharacter::OnReload()
 				//}
 
 				WeaponRifle->OnReload(Mesh1P);
-
-				// 创建一个LatentInfo, 用不到Linkage直接传0(不能是-1)， UUID随机生成，指定延迟后要执行的函数ExecutionFunction，ExecutionFunction的归属者this
-				/*FLatentActionInfo LatentInfo;
-				LatentInfo.Linkage = 0;
-				LatentInfo.CallbackTarget = this;
-				LatentInfo.ExecutionFunction = "ReloadAmmo";
-				LatentInfo.UUID = __LINE__;
-				UKismetSystemLibrary::Delay(this, 3.0f, LatentInfo);
-				FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim.Arms_AK_Reload_anim'"));
-				UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));*/
 				IsReloading = false;
 				doOnce = false;
 			}

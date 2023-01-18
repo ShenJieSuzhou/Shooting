@@ -196,8 +196,5 @@ public:
 
 	// Init weapon
 	void SetWeapons();
-
-	UFUNCTION()
-	void ReloadAmmo();
 };
 
