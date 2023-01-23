@@ -313,14 +313,14 @@ void AShootingCharacter::OnReload()
 	}
 }
 
-void AShootingCharacter::ReloadAmmo()
-{
-	IsReloading = false;
-	doOnce = false;
-	UKismetSystemLibrary::PrintString(this, TEXT("DelayFromCpp: 3s"));
-	//清除计时器TimerHandle
-	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-}
+//void AShootingCharacter::ReloadAmmo()
+//{
+//	IsReloading = false;
+//	doOnce = false;
+//	UKismetSystemLibrary::PrintString(this, TEXT("DelayFromCpp: 3s"));
+//	//清除计时器TimerHandle
+//	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+//}
 
 
 void AShootingCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
