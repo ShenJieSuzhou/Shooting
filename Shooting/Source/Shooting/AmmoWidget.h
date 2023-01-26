@@ -25,4 +25,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TotalAmmo;
 
+
+public:
+	void UpdateAmmo(int current, int Magazine, int maxAmmount);
+
 };

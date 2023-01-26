@@ -5,7 +5,6 @@
 #include "Engine/Texture2D.h"
 #include "TextureResource.h"
 #include "CanvasItem.h"
-#include "CrossHairWidget.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShootingHUD::AShootingHUD()
@@ -44,4 +43,14 @@ void AShootingHUD::BeginPlay()
 	TSubclassOf<UCrossHairWidget> LoginWidgetClass = LoadClass<UCrossHairWidget>(NULL, *WidgetClassLoadPath);
 	UCrossHairWidget* LoginWidget = CreateWidget<UCrossHairWidget>(GetWorld(), LoginWidgetClass);
 	LoginWidget->AddToViewport();
+
+	FString AmmoWidgetPath = FString(TEXT("WidgetBlueprint'/Game/ShootingPawn/Blueprints/Ammo_HUD.Ammo_HUD_C'"));
+	TSubclassOf<UAmmoWidget> AmmoWidgetClass = LoadClass<UAmmoWidget>(NULL, *AmmoWidgetPath);
+	AmmoWidget = CreateWidget<UAmmoWidget>(GetWorld(), AmmoWidgetClass);
+	AmmoWidget->AddToViewport();
+}
+
+void AShootingHUD::UpdateAmmo(int current, int Magazine, int maxAmmount)
+{
+	AmmoWidget->UpdateAmmo(current,Magazine, maxAmmount);
 }
