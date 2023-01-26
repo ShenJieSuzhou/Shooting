@@ -2,6 +2,8 @@
 
 
 #include "WeaponAK.h"
+#include "ShootingHUD.h"
+#include "Kismet/GameplayStatics.h"
 
 AWeaponAK::AWeaponAK()
 {
@@ -23,6 +25,9 @@ AWeaponAK::AWeaponAK()
 	BulletSpread = 0.7;
 	// ×°µ¯Ê±¼ä
 	ReloadTime = 2.0;
+
+	//AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	//hud->UpdateAmmo(AmmoCount, MaxAmmoCount, MaxAmmoCount);
 }
 
 
@@ -36,7 +41,10 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 	{
 		SkMesh->PlayAnimation(assetAnim, false);
 	}
-	//AmmoCount--;
+
+	AmmoCount--;
+	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	hud->UpdateAmmo(AmmoCount, MaxAmmoCount, MaxAmmoCount);
 }
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
@@ -62,6 +70,9 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 	{
 		FP_Gun->PlayAnimation(assetAnim, false);
 	}
+
+	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	hud->UpdateAmmo(AmmoCount, MaxAmmoCount, MaxAmmoCount);
 }
 
 bool AWeaponAK::OnCheckAmmo()

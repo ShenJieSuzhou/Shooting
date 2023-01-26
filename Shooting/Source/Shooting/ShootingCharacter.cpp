@@ -224,7 +224,7 @@ void AShootingCharacter::OnFire()
 	}
 	else if(CurWeaponType == EWeapon::EW_AK)
 	{
-		if(IsReloading)
+		if(!IsReloading)
 		{
 			if (WeaponRifle->OnCheckAmmo())
 			{
@@ -238,7 +238,7 @@ void AShootingCharacter::OnFire()
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
-		if (IsReloading)
+		if (!IsReloading)
 		{
 			if (WeaponPisto->OnCheckAmmo())
 			{
@@ -312,15 +312,6 @@ void AShootingCharacter::OnReload()
 		}
 	}
 }
-
-//void AShootingCharacter::ReloadAmmo()
-//{
-//	IsReloading = false;
-//	doOnce = false;
-//	UKismetSystemLibrary::PrintString(this, TEXT("DelayFromCpp: 3s"));
-//	//Çå³ý¼ÆÊ±Æ÷TimerHandle
-//	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-//}
 
 
 void AShootingCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
