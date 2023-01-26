@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Camera/CameraComponent.h"
 #include "WeaponAK.generated.h"
 
 class USkeletalMeshComponent;

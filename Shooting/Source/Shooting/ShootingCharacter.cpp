@@ -230,10 +230,10 @@ void AShootingCharacter::OnFire()
 			{
 				WeaponRifle->OnFire(Mesh1P);
 			}
-			else
-			{
-				OnReload();
-			}
+			//else
+			//{
+			//	OnReload();
+			//}
 		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
@@ -244,10 +244,10 @@ void AShootingCharacter::OnFire()
 			{
 				WeaponPisto->OnFire(Mesh1P);
 			}
-			else
-			{
-				OnReload();
-			}
+			//else
+			//{
+			//	OnReload();
+			//}
 		}	
 	}
 }

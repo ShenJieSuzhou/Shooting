@@ -3,7 +3,10 @@
 
 #include "WeaponAK.h"
 #include "ShootingHUD.h"
+#include "ShootingCharacter.h"
+#include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Math/UnrealMathUtility.h"
 
 AWeaponAK::AWeaponAK()
 {
@@ -39,6 +42,9 @@ void AWeaponAK::BeginPlay()
 
 void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 {
+	// 播放声音
+
+
 	// Load static asset
 	FString AkFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim.Arms_AK_Fire_anim'"));
 	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkFireAnimation));
@@ -48,9 +54,41 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 		SkMesh->PlayAnimation(assetAnim, false);
 	}
 
+	//发射子弹
+
+
+
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
+
+	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
+	FVector TraceStart = FirstCamera->GetComponentLocation();
+	FVector TraceEnd = FirstCamera->GetForwardVector() * 200000;
+
+	float calu = BulletSpread * -1;
+	float x = FMath::RandRange(calu, BulletSpread);
+	float y = FMath::RandRange(calu, BulletSpread);
+	float z = FMath::RandRange(calu, BulletSpread);
+
+	TraceEnd = TraceEnd + TraceStart + FVector(x, y, z);
+
+
+	FHitResult Hit;
+	FCollisionQueryParams queryParam;
+	queryParam.AddIgnoredActor(this);
+	GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, queryParam);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, Hit.bBlockingHit ? FColor::Blue : FColor::Red, false, 5.0f);
+	
+	if(Hit.bBlockingHit && IsValid(Hit.GetActor()))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
+	}
 }
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
@@ -59,12 +97,17 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 	// 如果子弹小于一个弹夹就不换弹
 	if(MaxAmmoCount < 30)
 	{
+		// 播放动画和声音
+
 		AmmoCount = MaxAmmoCount;
 		MaxAmmoCount = 0;
 		MagazineAmmo = 0;
+
+
 		return;
 	}
 
+	// 播放动画和声音
 	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
 
 	// Load static asset
