@@ -19,13 +19,13 @@ class SHOOTING_API AWeaponAK : public AWeaponBase
 public:
 	AWeaponAK();
 
+	virtual void BeginPlay() override;
+
 	void OnFire(USkeletalMeshComponent* SkMesh);
 
 	void OnReload(USkeletalMeshComponent* SkMesh);
 
 	bool OnCheckAmmo();
-
-	void SetAmmo();
 
 public:
 	FTimerHandle TimerHandle;

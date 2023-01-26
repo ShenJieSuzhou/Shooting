@@ -17,19 +17,25 @@ AWeaponAK::AWeaponAK()
 		}
 	}
 
-	// 最大弹夹量
+	// 最大携带弹量
 	MaxAmmoCount = 120;
-	// 单个弹夹弹量
+	// 当前弹量
 	AmmoCount = 30;
+	// 弹夹装载量
+	MagazineAmmo = 30;
 	// 子弹精度
 	BulletSpread = 0.7;
 	// 装弹时间
 	ReloadTime = 2.0;
-
-	//AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	//hud->UpdateAmmo(AmmoCount, MaxAmmoCount, MaxAmmoCount);
 }
 
+void AWeaponAK::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	//AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	//hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
+}
 
 void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 {
@@ -44,7 +50,7 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	hud->UpdateAmmo(AmmoCount, MaxAmmoCount, MaxAmmoCount);
+	hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
 }
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
@@ -55,12 +61,11 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 	{
 		AmmoCount = MaxAmmoCount;
 		MaxAmmoCount = 0;
+		MagazineAmmo = 0;
 		return;
 	}
 
 	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
-
-	// Play Animation
 
 	// Load static asset
 	FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AK_Reload_anim.AK_Reload_anim'"));
@@ -71,8 +76,9 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 		FP_Gun->PlayAnimation(assetAnim, false);
 	}
 
+	AmmoCount = MagazineAmmo;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	hud->UpdateAmmo(AmmoCount, MaxAmmoCount, MaxAmmoCount);
+	hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
 }
 
 bool AWeaponAK::OnCheckAmmo()
@@ -83,10 +89,4 @@ bool AWeaponAK::OnCheckAmmo()
 	}
 
 	return true;
-}
-void AWeaponAK::SetAmmo()
-{
-	AmmoCount = 30;
-	//清除计时器TimerHandle
-	//GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }

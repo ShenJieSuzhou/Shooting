@@ -52,6 +52,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int MaxAmmoCount;
 
+	int MagazineAmmo;
+
 public:	
 	// Sets default values for this actor's properties
 	AWeaponBase();
