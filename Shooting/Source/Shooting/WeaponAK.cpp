@@ -17,6 +17,7 @@ AWeaponAK::AWeaponAK()
 		if(assetSkeletal.Succeeded())
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
+			FP_MuzzleLocation->SetWorldLocation(FVector(68.2f, -2.0f, 9.0f));
 		}
 	}
 
@@ -56,12 +57,16 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 
 	//·¢Éä×Óµ¯
 
-
-
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
 
+	// Camera Shot
+	CameraShotLineTrace();
+}
+
+void AWeaponAK::CameraShotLineTrace()
+{
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
 	FVector TraceStart = FirstCamera->GetComponentLocation();
@@ -78,17 +83,30 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
-	GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, queryParam);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, Hit.bBlockingHit ? FColor::Blue : FColor::Red, false, 5.0f);
-	
-	if(Hit.bBlockingHit && IsValid(Hit.GetActor()))
+	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, queryParam);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Blue, false, 5.0f);
+
+	if (isHit)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
+		FVector start = FP_MuzzleLocation->GetComponentLocation();
+		GunShotLineTrace(start, Hit.ImpactPoint);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
 	}
+
+
+}
+
+void AWeaponAK::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
+{
+	FHitResult Hit;
+	FCollisionQueryParams queryParam;
+	queryParam.AddIgnoredActor(this);
+	//GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, queryParam);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 5.0f);
 }
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)

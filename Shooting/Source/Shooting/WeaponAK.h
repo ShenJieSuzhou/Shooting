@@ -28,6 +28,10 @@ public:
 
 	bool OnCheckAmmo();
 
+	void CameraShotLineTrace();
+
+	void GunShotLineTrace(FVector TraceStart, FVector TraceEnd);
+
 public:
 	FTimerHandle TimerHandle;
 };
