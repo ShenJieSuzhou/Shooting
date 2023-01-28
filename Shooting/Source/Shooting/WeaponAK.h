@@ -32,6 +32,8 @@ public:
 
 	void GunShotLineTrace(FVector TraceStart, FVector TraceEnd);
 
+	void SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
+
 public:
 	FTimerHandle TimerHandle;
 };

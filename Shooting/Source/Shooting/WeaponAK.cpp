@@ -151,3 +151,8 @@ bool AWeaponAK::OnCheckAmmo()
 
 	return true;
 }
+
+void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
+{
+
+}
