@@ -6,6 +6,7 @@
 #include "ShootingCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
 
 AWeaponAK::AWeaponAK()
@@ -91,6 +92,7 @@ void AWeaponAK::CameraShotLineTrace()
 		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
 		FVector start = FP_MuzzleLocation->GetComponentLocation();
 		GunShotLineTrace(start, Hit.ImpactPoint);
+		SpawnBulletDecalTrace(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
 	}
 	else
 	{
@@ -154,5 +156,19 @@ bool AWeaponAK::OnCheckAmmo()
 
 void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
 {
+	//Blueprint
+	UClass* BulletDecalClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
 
+	UWorld* const World = GetWorld();
+	FRotator Rotator = FRotator(0.f);
+
+	if (BulletDecalClass != nullptr)
+	{
+		if (World != nullptr)
+		{
+			//ImpactPoint
+			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(ImpactPoint);
+			World->SpawnActor<AWeaponBase>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
+		}
+	}
 }
