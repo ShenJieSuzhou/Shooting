@@ -157,7 +157,7 @@ bool AWeaponAK::OnCheckAmmo()
 void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
 {
 	//Blueprint
-	UClass* BulletDecalClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
+	UClass* BulletDecalClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
 
 	UWorld* const World = GetWorld();
 	FRotator Rotator = FRotator(0.f);
@@ -168,7 +168,7 @@ void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLo
 		{
 			//ImpactPoint
 			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(ImpactPoint);
-			World->SpawnActor<AWeaponBase>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
+			World->SpawnActor<AActor>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
 		}
 	}
 }
