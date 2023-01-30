@@ -166,7 +166,8 @@ void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLo
 		{
 			//ImpactPoint
 			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(ImpactPoint);
-			World->SpawnActor<AActor>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
+			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
+			BulletDecal->SetActorScale3D(FVector(0.025f));
 		}
 	}
 }

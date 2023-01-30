@@ -286,7 +286,7 @@ void AShootingCharacter::OnReload()
 				//	if (AnimInstance != nullptr)
 				//	{
 				//		AnimInstance->Montage_Play(assetMontage, 1.f);
-				//	}
+				//	}22
 				//}
 
 				WeaponRifle->OnReload(Mesh1P);
