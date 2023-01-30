@@ -77,15 +77,13 @@ void AWeaponAK::CameraShotLineTrace()
 	float x = FMath::RandRange(calu, BulletSpread);
 	float y = FMath::RandRange(calu, BulletSpread);
 	float z = FMath::RandRange(calu, BulletSpread);
-
 	TraceEnd = TraceEnd + TraceStart + FVector(x, y, z);
-
 
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
-	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, queryParam);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Blue, false, 5.0f);
+	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
 
 	if (isHit)
 	{
@@ -107,7 +105,7 @@ void AWeaponAK::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
-	//GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, queryParam);
+	queryParam.AddIgnoredComponent(FP_Gun);
 	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 5.0f);
 }
 
