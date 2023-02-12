@@ -45,7 +45,12 @@ void AWeaponAK::BeginPlay()
 void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 {
 	// ≤•∑≈…˘“Ù
-
+	FString GunShotSound = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Gunshot.Gunshot'"));
+	FireSound = Cast<USoundBase>(LoadObject<USoundBase>(nullptr, *GunShotSound));
+	if (FireSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+	}
 
 	// Load static asset
 	FString AkFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim.Arms_AK_Fire_anim'"));
@@ -146,6 +151,13 @@ bool AWeaponAK::OnCheckAmmo()
 {
 	if(AmmoCount <= 0)
 	{
+		// ≤•∑≈…˘“Ù
+		FString DryFireSoundPath = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/DryFire.DryFire'"));
+		DryFireSound = Cast<USoundBase>(LoadObject<USoundBase>(nullptr, *DryFireSoundPath));
+		if (DryFireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, DryFireSound, GetActorLocation());
+		}
 		return false;
 	}
 
