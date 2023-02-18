@@ -276,17 +276,17 @@ void AShootingCharacter::OnReload()
 					Mesh1P->PlayAnimation(assetAnim, false);
 				}
 
-				//AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'
+				////AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'
 				//FString ArmsAKReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Reload_anim_Montage.Arms_AK_Reload_anim_Montage'"));
 				//UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsAKReloadMontage));
 				//if (assetMontage != nullptr)
 				//{
-				//	// Get the animation object for the arms mesh
+				//	 Get the animation object for the arms mesh
 				//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
 				//	if (AnimInstance != nullptr)
 				//	{
 				//		AnimInstance->Montage_Play(assetMontage, 1.f);
-				//	}22
+				//	}
 				//}
 
 				WeaponRifle->OnReload(Mesh1P);
@@ -313,6 +313,49 @@ void AShootingCharacter::OnReload()
 	}
 }
 
+
+/// Reload Sound
+void AShootingCharacter::DropMagazine()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("DropMagazine"));
+	// ≤•∑≈–∂œ¬µØº–…˘“Ù
+	FString DropSoundPath = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Reload_Drop.Reload_Drop'"));
+	USoundBase* DropSound = Cast<USoundBase>(LoadObject<USoundBase>(nullptr, *DropSoundPath));
+	if (DropSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DropSound, GetActorLocation());
+	}
+	
+	DropSound = nullptr;
+}
+
+void AShootingCharacter::InsertMagazine()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("InsertMagazine"));
+	// ≤•∑≈◊∞»ÎµØº–…˘“Ù
+	FString InsertSoundPath = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Reload_Insert.Reload_Insert'"));
+	USoundBase* InsertSound = Cast<USoundBase>(LoadObject<USoundBase>(nullptr, *InsertSoundPath));
+	if (InsertSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, InsertSound, GetActorLocation());
+	}
+
+	InsertSound = nullptr;
+}
+
+void AShootingCharacter::ReloadMagazine()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("ReloadMagazine"));
+	// ≤•∑≈…œ◊”µØ…˘“Ù
+	FString ReloadSoundPath = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Reload_Load.Reload_Load'"));
+	USoundBase* ReloadSound = Cast<USoundBase>(LoadObject<USoundBase>(nullptr, *ReloadSoundPath));
+	if (ReloadSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
+	}
+
+	ReloadSound = nullptr;
+}
 
 void AShootingCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {

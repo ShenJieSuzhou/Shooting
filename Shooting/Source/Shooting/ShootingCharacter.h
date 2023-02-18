@@ -141,6 +141,15 @@ protected:
 	// Weapon3
 	void OnHoldKnife();
 
+	UFUNCTION(BlueprintCallable)
+	void DropMagazine();
+
+	UFUNCTION(BlueprintCallable)
+	void InsertMagazine();
+
+	UFUNCTION(BlueprintCallable)
+	void ReloadMagazine();
+
 
 	///** Resets HMD orientation and position in VR. */
 	//void OnResetVR();
