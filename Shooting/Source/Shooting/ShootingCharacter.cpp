@@ -95,16 +95,16 @@ void AShootingCharacter::BeginPlay()
 	doOnce = false;
 	WeaponChanged = false;
 	IsReloading = false;
-	//WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-	//WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	
 	CurrentWeapon = WeaponRifle;
 	CurWeaponType = EWeapon::EW_Knife;
 
 	Mesh1P->SetHiddenInGame(false, true);
-	//WeaponRifle->FP_Gun->SetHiddenInGame(false);
-	//WeaponPisto->FP_Gun->SetHiddenInGame(true);
+	WeaponRifle->FP_Gun->SetHiddenInGame(true);
+	WeaponPisto->FP_Gun->SetHiddenInGame(true);
 	WeaponKnife->FP_Gun->SetHiddenInGame(false);
 }
 
@@ -181,9 +181,9 @@ void AShootingCharacter::OnHoldRifle()
 		WeaponChanged = true;
 		CurrentWeapon = WeaponRifle;
 
-		//WeaponRifle->FP_Gun->SetHiddenInGame(false);
-		//WeaponPisto->FP_Gun->SetHiddenInGame(true);
-		//WeaponKnife->FP_Gun->SetHiddenInGame(true);
+		WeaponRifle->FP_Gun->SetHiddenInGame(false);
+		WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		WeaponKnife->FP_Gun->SetHiddenInGame(true);
 		CurWeaponType = EWeapon::EW_AK;
 	}
 }
@@ -209,9 +209,9 @@ void AShootingCharacter::OnHoldKnife()
 		WeaponChanged = false;
 		CurrentWeapon = WeaponKnife;
 
-		//WeaponRifle->FP_Gun->SetHiddenInGame(true);
-		//WeaponPisto->FP_Gun->SetHiddenInGame(true);
-		//WeaponKnife->FP_Gun->SetHiddenInGame(false);
+		WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		WeaponKnife->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Knife;
 	}
 }
@@ -224,17 +224,17 @@ void AShootingCharacter::OnFire()
 	}
 	else if(CurWeaponType == EWeapon::EW_AK)
 	{
-		//if(!IsReloading)
-		//{
-		//	if (WeaponRifle->OnCheckAmmo())
-		//	{
-		//		WeaponRifle->OnFire(Mesh1P);
-		//	}
-		//	//else
-		//	//{
-		//	//	OnReload();
-		//	//}
-		//}
+		if(!IsReloading)
+		{
+			if (WeaponRifle->OnCheckAmmo())
+			{
+				WeaponRifle->OnFire(Mesh1P);
+			}
+			//else
+			//{
+			//	OnReload();
+			//}
+		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
