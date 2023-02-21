@@ -53,12 +53,18 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 	}
 
 	// Load static asset
-	FString AkFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim.Arms_AK_Fire_anim'"));
-	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkFireAnimation));
+	FString AKFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim_Montage.Arms_AK_Fire_anim_Montage'"));
+	UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *AKFireMontage));
+	FireAnimation = assetMontage;
 
-	if (assetAnim != nullptr)
+	if (FireAnimation != nullptr)
 	{
-		SkMesh->PlayAnimation(assetAnim, false);
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 0.8f);
+		}
 	}
 
 	//发射子弹
@@ -133,7 +139,7 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 	// 播放动画和声音
 	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
 
-	// Load static asset
+	//// Load static asset
 	FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AK_Reload_anim.AK_Reload_anim'"));
 	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
 
