@@ -195,14 +195,17 @@ void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLo
 void AWeaponAK::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
 {
 	//Blueprint
-	UClass* TraceRoundClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/TraceRound_BP.TraceRound_BP'_C"));
+	UClass* TraceRoundClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/TraceRound_BP.TraceRound_BP_C'"));
 	UWorld* const World = GetWorld();
-	FRotator Rotator = FRotator(0.f);
 
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
 	FRotator CameraRotator = FirstCamera->GetComponentRotation();
-
 	auto Matix = UKismetMathLibrary::MakeTransform(SpawnTransFormLocation, CameraRotator, FVector(1, 1, 1));
+
 	AActor* Tracer = World->SpawnActor<AActor>(TraceRoundClass, Matix);
+	if(!Tracer)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
+	}
 }
