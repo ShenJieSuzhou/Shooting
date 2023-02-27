@@ -19,7 +19,6 @@ AWeaponBase::AWeaponBase()
 	// Set MuzzleLocation
 	FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	FP_MuzzleLocation->SetRelativeLocation(FVector(78.2f, -2.0f, 9.0f));
 
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 }

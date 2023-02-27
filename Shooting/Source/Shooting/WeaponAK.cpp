@@ -201,7 +201,7 @@ void AWeaponAK::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocati
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
 	FRotator CameraRotator = FirstCamera->GetComponentRotation();
-	auto Matix = UKismetMathLibrary::MakeTransform(SpawnTransFormLocation, CameraRotator, FVector(1, 1, 1));
+	auto Matix = UKismetMathLibrary::MakeTransform(Location, CameraRotator, FVector(1, 1, 1));
 
 	AActor* Tracer = World->SpawnActor<AActor>(TraceRoundClass, Matix);
 	if(!Tracer)
