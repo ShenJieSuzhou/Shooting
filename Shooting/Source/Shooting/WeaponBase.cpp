@@ -21,6 +21,9 @@ AWeaponBase::AWeaponBase()
 	FP_MuzzleLocation->SetupAttachment(FP_Gun);
 
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
+	// Set PointLight
+	//PointLight = CreateDefaultSubobject<USceneComponent>(TEXT("PointLight"));
 }
 
 // Called when the game starts or when spawned

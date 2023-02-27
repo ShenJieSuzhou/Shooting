@@ -26,6 +26,9 @@ public:
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USceneComponent* FP_MuzzleLocation;
+	
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	//UPointLightComponent* PointLight;
 
 public:
 	FVector GunOffset;
