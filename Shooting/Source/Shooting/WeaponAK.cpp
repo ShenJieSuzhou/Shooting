@@ -18,7 +18,7 @@ AWeaponAK::AWeaponAK()
 		if(assetSkeletal.Succeeded())
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
-			FP_MuzzleLocation->SetWorldLocation(FVector(68.2f, -2.0f, 9.0f));
+			FP_MuzzleLocation->SetWorldLocation(FVector(70.2f, -2.0f, 9.0f));
 		}
 	}
 
@@ -102,7 +102,12 @@ void AWeaponAK::CameraShotLineTrace()
 		FVector start = FP_MuzzleLocation->GetComponentLocation();
 		//GunShotLineTrace(start, Hit.ImpactPoint);
 		SpawnBulletDecalTrace(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
-		SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+
+		int32 value = FMath::RandRange(1, 10);
+		if(value >= 0)
+		{
+			SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+		}	
 	}
 	else
 	{
