@@ -94,14 +94,15 @@ void AWeaponAK::CameraShotLineTrace()
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
 	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
+	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
 
 	if (isHit)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
 		FVector start = FP_MuzzleLocation->GetComponentLocation();
-		GunShotLineTrace(start, Hit.ImpactPoint);
+		//GunShotLineTrace(start, Hit.ImpactPoint);
 		SpawnBulletDecalTrace(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+		SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
 	}
 	else
 	{
@@ -188,4 +189,20 @@ void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLo
 			BulletDecal->SetActorScale3D(FVector(0.025f));
 		}
 	}
+}
+
+
+void AWeaponAK::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
+{
+	//Blueprint
+	UClass* TraceRoundClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/TraceRound_BP.TraceRound_BP'_C"));
+	UWorld* const World = GetWorld();
+	FRotator Rotator = FRotator(0.f);
+
+	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
+	FRotator CameraRotator = FirstCamera->GetComponentRotation();
+
+	auto Matix = UKismetMathLibrary::MakeTransform(SpawnTransFormLocation, CameraRotator, FVector(1, 1, 1));
+	AActor* Tracer = World->SpawnActor<AActor>(TraceRoundClass, Matix);
 }

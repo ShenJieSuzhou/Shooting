@@ -34,6 +34,8 @@ public:
 
 	void SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
 
+	void SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
+
 public:
 	FTimerHandle TimerHandle;
 };
