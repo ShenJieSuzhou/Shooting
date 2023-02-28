@@ -24,8 +24,10 @@ AWeaponAK::AWeaponAK()
 			FString GunMuzzle = FString(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/FlashPlane.plane_ground_3x3'"));
 			UStaticMesh* mesh = Cast<UStaticMesh>(LoadObject<UStaticMesh>(nullptr, *GunMuzzle));
 			FP_FlashPlane->SetStaticMesh(mesh);
-			FP_FlashPlane->SetWorldLocation(FVector(77.9f, -1.85f, 9.92f));
-			FP_FlashPlane->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+			FP_FlashPlane->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			FP_FlashPlane->SetWorldRotation(FRotator(90.f, 90.f, 90.f));
+			FP_FlashPlane->SetWorldLocation(FVector(89.f, 0, 9.92f));
+			FP_FlashPlane->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
 		}
 	}
 
@@ -242,8 +244,8 @@ void AWeaponAK::DelayAndDisplayMuzzle()
 	FP_PointLight->SetIntensity(0);
 	FP_FlashPlane->SetVisibility(false);
 
-	float RotatorValue = FMath::RandRange(-90, 90);
+	float RotatorValue = FMath::RandRange(60, 120);
 	FP_FlashPlane->SetRelativeRotation(FRotator(90, RotatorValue, 90));
-	float ScaleValue = FMath::RandRange(0.2f, 0.6f);
+	float ScaleValue = FMath::RandRange(0.1f, 0.3f);
 	FP_FlashPlane->SetWorldScale3D(FVector(ScaleValue, ScaleValue, ScaleValue));
 }

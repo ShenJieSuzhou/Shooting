@@ -29,8 +29,8 @@ AWeaponBase::AWeaponBase()
 
 	// SetPlane
 	FP_FlashPlane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunFlash"));
-	FP_FlashPlane->AttachToComponent(FP_Gun, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 	FP_FlashPlane->SetVisibility(false);
+	FP_FlashPlane->SetupAttachment(FP_Gun);
 }
 
 // Called when the game starts or when spawned
