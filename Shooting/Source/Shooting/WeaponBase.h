@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Engine/EngineTypes.h"
 #include "Sound/SoundBase.h"
+#include "Components/PointLightComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "WeaponBase.generated.h"
 
 class USkeletalMeshComponent;
@@ -27,8 +29,11 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USceneComponent* FP_MuzzleLocation;
 	
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//UPointLightComponent* PointLight;
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UPointLightComponent* FP_PointLight;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UStaticMeshComponent* FP_FlashPlane;
 
 public:
 	FVector GunOffset;

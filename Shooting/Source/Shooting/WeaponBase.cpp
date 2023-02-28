@@ -23,7 +23,14 @@ AWeaponBase::AWeaponBase()
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
 	// Set PointLight
-	//PointLight = CreateDefaultSubobject<USceneComponent>(TEXT("PointLight"));
+	FP_PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLight"));
+	FP_PointLight->SetIntensity(0);
+	FP_PointLight->SetupAttachment(FP_Gun);
+
+	// SetPlane
+	FP_FlashPlane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunFlash"));
+	FP_FlashPlane->AttachToComponent(FP_Gun, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+	FP_FlashPlane->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned

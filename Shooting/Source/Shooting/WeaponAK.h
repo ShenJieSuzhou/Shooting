@@ -36,6 +36,12 @@ public:
 
 	void SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
 
+	void MuzzleFlash();
+	
+public:
+	UFUNCTION()
+	void DelayAndDisplayMuzzle();
+
 public:
 	FTimerHandle TimerHandle;
 };

@@ -19,6 +19,13 @@ AWeaponAK::AWeaponAK()
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
 			FP_MuzzleLocation->SetWorldLocation(FVector(70.2f, -2.0f, 9.0f));
+			FP_PointLight->SetWorldLocation(FVector(60.0f, -10.0f, 0.f));
+
+			FString GunMuzzle = FString(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/FlashPlane.plane_ground_3x3'"));
+			UStaticMesh* mesh = Cast<UStaticMesh>(LoadObject<UStaticMesh>(nullptr, *GunMuzzle));
+			FP_FlashPlane->SetStaticMesh(mesh);
+			FP_FlashPlane->SetWorldLocation(FVector(77.9f, -1.85f, 9.92f));
+			FP_FlashPlane->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 		}
 	}
 
@@ -107,6 +114,7 @@ void AWeaponAK::CameraShotLineTrace()
 		if(value >= 0)
 		{
 			SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+			MuzzleFlash();
 		}	
 	}
 	else
@@ -213,4 +221,29 @@ void AWeaponAK::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocati
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
 	}
+}
+
+void AWeaponAK::MuzzleFlash()
+{
+	FP_PointLight->SetIntensity(20000.0f);
+	FP_FlashPlane->SetVisibility(true);
+
+	// Delay 0.1
+	FLatentActionInfo LatentInfo;
+	LatentInfo.Linkage = 0;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.ExecutionFunction = "DelayAndDisplayMuzzle";
+	LatentInfo.UUID = __LINE__;//ÐÐºÅÎªID
+	UKismetSystemLibrary::Delay(this, 0.1f, LatentInfo);
+}
+
+void AWeaponAK::DelayAndDisplayMuzzle()
+{
+	FP_PointLight->SetIntensity(0);
+	FP_FlashPlane->SetVisibility(false);
+
+	float RotatorValue = FMath::RandRange(-90, 90);
+	FP_FlashPlane->SetRelativeRotation(FRotator(90, RotatorValue, 90));
+	float ScaleValue = FMath::RandRange(0.2f, 0.6f);
+	FP_FlashPlane->SetWorldScale3D(FVector(ScaleValue, ScaleValue, ScaleValue));
 }
