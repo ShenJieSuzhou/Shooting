@@ -41,19 +41,6 @@ AShootingCharacter::AShootingCharacter()
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
-	//// Create a gun mesh component
-	//PrimaryWeapon  = 
-	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
-	//FP_Gun->SetOnlyOwnerSee(false);			// otherwise won't be visible in the multiplayer
-	//FP_Gun->bCastDynamicShadow = false;
-	//FP_Gun->CastShadow = false;
-	//// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-	//FP_Gun->SetupAttachment(RootComponent);
-
-	//FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	//FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	//FP_MuzzleLocation->SetRelativeLocation(FVector(78.2f, -2.0f, 9.0f));
-
 	// Default offset from the character location for projectiles to spawn
 	//GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
@@ -100,12 +87,13 @@ void AShootingCharacter::BeginPlay()
 	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	
 	CurrentWeapon = WeaponRifle;
-	CurWeaponType = EWeapon::EW_Knife;
+	CurWeaponType = EWeapon::EW_AK;
+	WeaponType = 0;
 
 	Mesh1P->SetHiddenInGame(false, true);
-	WeaponRifle->FP_Gun->SetHiddenInGame(true);
+	WeaponRifle->FP_Gun->SetHiddenInGame(false);
 	WeaponPisto->FP_Gun->SetHiddenInGame(true);
-	WeaponKnife->FP_Gun->SetHiddenInGame(false);
+	WeaponKnife->FP_Gun->SetHiddenInGame(true);
 }
 
 void AShootingCharacter::SetWeapons()
@@ -185,6 +173,7 @@ void AShootingCharacter::OnHoldRifle()
 		WeaponPisto->FP_Gun->SetHiddenInGame(true);
 		WeaponKnife->FP_Gun->SetHiddenInGame(true);
 		CurWeaponType = EWeapon::EW_AK;
+		WeaponType = 0;
 	}
 }
 
@@ -199,6 +188,7 @@ void AShootingCharacter::OnHoldPisto()
 		WeaponRifle->SetHidden(true);
 		WeaponPisto->SetHidden(false);
 		CurWeaponType = EWeapon::EW_Pisto;
+		WeaponType = 1;
 	}
 }
 
@@ -213,6 +203,7 @@ void AShootingCharacter::OnHoldKnife()
 		WeaponPisto->FP_Gun->SetHiddenInGame(true);
 		WeaponKnife->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Knife;
+		WeaponType = 2;
 	}
 }
 

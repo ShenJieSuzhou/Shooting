@@ -105,6 +105,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool WeaponChanged;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int WeaponType;
+
 	bool IsReloading;
 
 	// Weapon Current
