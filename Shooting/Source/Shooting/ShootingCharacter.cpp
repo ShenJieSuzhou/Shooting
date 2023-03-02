@@ -166,7 +166,6 @@ void AShootingCharacter::OnHoldRifle()
 {
 	if(!IsReloading)
 	{
-		WeaponChanged = true;
 		CurrentWeapon = WeaponRifle;
 
 		WeaponRifle->FP_Gun->SetHiddenInGame(false);
@@ -181,12 +180,11 @@ void AShootingCharacter::OnHoldPisto()
 {
 	if (!IsReloading)
 	{
-		WeaponChanged = true;
 		CurrentWeapon = WeaponPisto;
 
-		WeaponKnife->SetHidden(true);
-		WeaponRifle->SetHidden(true);
-		WeaponPisto->SetHidden(false);
+		WeaponKnife->FP_Gun->SetHiddenInGame(true);
+		WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		WeaponPisto->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Pisto;
 		WeaponType = 1;
 	}
@@ -221,10 +219,6 @@ void AShootingCharacter::OnFire()
 			{
 				WeaponRifle->OnFire(Mesh1P);
 			}
-			//else
-			//{
-			//	OnReload();
-			//}
 		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
@@ -235,10 +229,6 @@ void AShootingCharacter::OnFire()
 			{
 				WeaponPisto->OnFire(Mesh1P);
 			}
-			//else
-			//{
-			//	OnReload();
-			//}
 		}	
 	}
 }
