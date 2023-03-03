@@ -24,4 +24,18 @@ public:
 	void OnReload(USkeletalMeshComponent* SkMesh);
 
 	bool OnCheckAmmo();
+
+	void CameraShotLineTrace();
+
+	void GunShotLineTrace(FVector TraceStart, FVector TraceEnd);
+
+	void SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
+
+	void SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
+
+	void MuzzleFlash();
+
+public:
+	UFUNCTION()
+	void DelayAndDisplayMuzzle();
 };
