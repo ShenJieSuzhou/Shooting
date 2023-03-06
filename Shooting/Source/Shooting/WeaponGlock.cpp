@@ -69,6 +69,15 @@ void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh)
 		}
 	}
 
+	// Load static asset
+	FString GlockFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Glock_Fire_anim.Glock_Fire_anim'"));
+	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *GlockFireAnimation));
+
+	if (assetAnim != nullptr)
+	{
+		FP_Gun->PlayAnimation(assetAnim, false);
+	}
+
 	//·¢Éä×Óµ¯
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());

@@ -76,6 +76,15 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 		}
 	}
 
+	// Load static asset
+	FString AKFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AK_Fire_anim.AK_Fire_anim'"));
+	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AKFireAnimation));
+
+	if (assetAnim != nullptr)
+	{
+		FP_Gun->PlayAnimation(assetAnim, false);
+	}
+
 	//·¢Éä×Óµ¯
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
