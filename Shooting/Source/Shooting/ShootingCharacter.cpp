@@ -94,6 +94,8 @@ void AShootingCharacter::BeginPlay()
 	WeaponRifle->FP_Gun->SetHiddenInGame(false);
 	WeaponPisto->FP_Gun->SetHiddenInGame(true);
 	WeaponKnife->FP_Gun->SetHiddenInGame(true);
+
+	hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 }
 
 void AShootingCharacter::SetWeapons()
@@ -173,6 +175,7 @@ void AShootingCharacter::OnHoldRifle()
 		WeaponKnife->FP_Gun->SetHiddenInGame(true);
 		CurWeaponType = EWeapon::EW_AK;
 		WeaponType = 0;
+		hud->UpdateAmmo(CurrentWeapon->AmmoCount, CurrentWeapon->MagazineAmmo, CurrentWeapon->MaxAmmoCount);
 	}
 }
 
@@ -187,6 +190,7 @@ void AShootingCharacter::OnHoldPisto()
 		WeaponPisto->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Pisto;
 		WeaponType = 1;
+		hud->UpdateAmmo(CurrentWeapon->AmmoCount, CurrentWeapon->MagazineAmmo, CurrentWeapon->MaxAmmoCount);
 	}
 }
 
@@ -202,6 +206,7 @@ void AShootingCharacter::OnHoldKnife()
 		WeaponKnife->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Knife;
 		WeaponType = 2;
+		hud->UpdateAmmo(0, 0, 0);
 	}
 }
 
@@ -275,8 +280,28 @@ void AShootingCharacter::OnReload()
 	{
 		if(WeaponPisto->MaxAmmoCount != 0)
 		{
-			IsReloading = true;
-			WeaponPisto->OnReload(Mesh1P);
+			if (!doOnce)
+			{
+				IsReloading = true;
+				doOnce = true;
+				WeaponPisto->OnReload(Mesh1P);
+
+				// Load static asset
+				FString ArmsPistoReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Glock_Reload_anim_Montage.Arms_Glock_Reload_anim_Montage'"));
+				UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsPistoReloadMontage));
+				if (assetMontage != nullptr)
+				{
+					// Get the animation object for the arms mesh
+					UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+					if (AnimInstance != nullptr)
+					{
+						AnimInstance->Montage_Play(assetMontage, 1.f);
+					}
+				}
+
+				IsReloading = false;
+				doOnce = false;
+			}
 		}
 		else
 		{

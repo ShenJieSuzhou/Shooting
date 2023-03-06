@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
+#include "ShootingHUD.h"
+#include "ShootingCharacter.h"
 
 AWeaponGlock::AWeaponGlock()
 {
@@ -17,6 +19,16 @@ AWeaponGlock::AWeaponGlock()
 		if(assetSkeletal.Succeeded())
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
+			FP_MuzzleLocation->SetWorldLocation(FVector(17.0f, 0, 7.0f));
+			FP_PointLight->SetWorldLocation(FVector(39.0f, -5.0f, 5.f));
+
+			FString GunMuzzle = FString(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/FlashPlane.plane_ground_3x3'"));
+			UStaticMesh* mesh = Cast<UStaticMesh>(LoadObject<UStaticMesh>(nullptr, *GunMuzzle));
+			FP_FlashPlane->SetStaticMesh(mesh);
+			FP_FlashPlane->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			FP_FlashPlane->SetWorldRotation(FRotator(90.f, 90.f, 90.f));
+			FP_FlashPlane->SetWorldLocation(FVector(22.f, 1, 7.37f));
+			FP_FlashPlane->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
 		}
 	}
 
@@ -24,6 +36,8 @@ AWeaponGlock::AWeaponGlock()
 	MaxAmmoCount = 100;
 	// 单个弹夹弹量
 	AmmoCount = 20;
+	// 弹夹装载量
+	MagazineAmmo = 20;
 	// 子弹精度
 	BulletSpread = 0.8;
 	// 装弹时间
@@ -56,7 +70,6 @@ void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh)
 	}
 
 	//发射子弹
-
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
@@ -103,8 +116,6 @@ void AWeaponGlock::CameraShotLineTrace()
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
 	}
-
-
 }
 
 void AWeaponGlock::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
@@ -119,25 +130,21 @@ void AWeaponGlock::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
 void AWeaponGlock::OnReload(USkeletalMeshComponent* SkMesh)
 {
 	// 重新计算子弹数量
-		// 如果子弹小于一个弹夹就不换弹
-	if (MaxAmmoCount < 30)
+	// 如果子弹小于一个弹夹就不换弹
+	if (MaxAmmoCount < 20)
 	{
-		// 播放动画和声音
-
 		AmmoCount = MaxAmmoCount;
 		MaxAmmoCount = 0;
 		MagazineAmmo = 0;
-
-
 		return;
 	}
 
 	// 播放动画和声音
-	MaxAmmoCount = MaxAmmoCount - 30 + AmmoCount;
+	MaxAmmoCount = MaxAmmoCount - 20 + AmmoCount;
 
 	//// Load static asset
-	FString AkReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AK_Reload_anim.AK_Reload_anim'"));
-	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AkReloadAnimation));
+	FString GlockReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Glock_Reload_anim.Glock_Reload_anim'"));
+	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *GlockReloadAnimation));
 
 	if (assetAnim != nullptr)
 	{

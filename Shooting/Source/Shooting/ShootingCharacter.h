@@ -9,6 +9,7 @@
 #include "WeaponGlock.h"
 #include "WeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "ShootingHUD.h"
 #include "ShootingCharacter.generated.h"
 
 class UInputComponent;
@@ -125,6 +126,8 @@ public:
 	EWeapon CurWeaponType;
 
 	FTimerHandle TimerHandle;
+
+	AShootingHUD* hud;
 
 	bool doOnce;
 

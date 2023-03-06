@@ -77,7 +77,6 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 	}
 
 	//·¢Éä×Óµ¯
-
 	AmmoCount--;
 	AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
