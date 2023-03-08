@@ -37,7 +37,7 @@ class AShootingCharacter : public ACharacter
 	GENERATED_BODY()
 public:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
 
 	/** Gun mesh: 1st person view (seen only by self) */
@@ -111,6 +111,9 @@ public:
 
 	bool IsReloading;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsAimDown;
+
 	// Weapon Current
 	AWeaponBase* CurrentWeapon;
 
@@ -123,6 +126,7 @@ public:
 	// Weapon Knife
 	AWeaponKnife* WeaponKnife;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EWeapon CurWeaponType;
 
 	FTimerHandle TimerHandle;
@@ -146,6 +150,12 @@ protected:
 
 	// Weapon3
 	void OnHoldKnife();
+
+	UFUNCTION(BlueprintCallable)
+	void OnAimDownSight();
+
+	UFUNCTION(BlueprintCallable)
+	void OnRecoverAimDownSight();
 
 	UFUNCTION(BlueprintCallable)
 	void DropMagazine();

@@ -89,6 +89,7 @@ void AShootingCharacter::BeginPlay()
 	CurrentWeapon = WeaponRifle;
 	CurWeaponType = EWeapon::EW_AK;
 	WeaponType = 0;
+	IsAimDown = false;
 
 	Mesh1P->SetHiddenInGame(false, true);
 	WeaponRifle->FP_Gun->SetHiddenInGame(false);
@@ -145,6 +146,10 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
+
+	//// Bind aim down
+	//PlayerInputComponent->BindAction("AimDown", IE_Pressed, this, &AShootingCharacter::OnAimDownSight);
+	//PlayerInputComponent->BindAction("AimDown", IE_Released, this, &AShootingCharacter::OnRecoverAimDownSight);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -222,7 +227,7 @@ void AShootingCharacter::OnFire()
 		{
 			if (WeaponRifle->OnCheckAmmo())
 			{
-				WeaponRifle->OnFire(Mesh1P);
+				WeaponRifle->OnFire(Mesh1P, IsAimDown);
 			}
 		}
 	}
@@ -232,7 +237,7 @@ void AShootingCharacter::OnFire()
 		{
 			if (WeaponPisto->OnCheckAmmo())
 			{
-				WeaponPisto->OnFire(Mesh1P);
+				WeaponPisto->OnFire(Mesh1P, IsAimDown);
 			}
 		}	
 	}
@@ -310,6 +315,17 @@ void AShootingCharacter::OnReload()
 	}
 }
 
+void AShootingCharacter::OnAimDownSight()
+{
+	IsAimDown = true;
+	hud->SetCrossWidgetVisible(false);
+}
+
+void AShootingCharacter::OnRecoverAimDownSight()
+{
+	IsAimDown = false;
+	hud->SetCrossWidgetVisible(true);
+}
 
 /// Reload Sound
 void AShootingCharacter::DropMagazine()

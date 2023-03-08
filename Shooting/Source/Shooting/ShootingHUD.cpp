@@ -41,8 +41,8 @@ void AShootingHUD::BeginPlay()
 
 	FString WidgetClassLoadPath = FString(TEXT("WidgetBlueprint'/Game/ShootingPawn/Blueprints/XHair_HUD.XHair_HUD_C'"));
 	TSubclassOf<UCrossHairWidget> LoginWidgetClass = LoadClass<UCrossHairWidget>(NULL, *WidgetClassLoadPath);
-	UCrossHairWidget* LoginWidget = CreateWidget<UCrossHairWidget>(GetWorld(), LoginWidgetClass);
-	LoginWidget->AddToViewport();
+	CrossWidget = CreateWidget<UCrossHairWidget>(GetWorld(), LoginWidgetClass);
+	CrossWidget->AddToViewport();
 
 	FString AmmoWidgetPath = FString(TEXT("WidgetBlueprint'/Game/ShootingPawn/Blueprints/Ammo_HUD.Ammo_HUD_C'"));
 	TSubclassOf<UAmmoWidget> AmmoWidgetClass = LoadClass<UAmmoWidget>(NULL, *AmmoWidgetPath);
@@ -53,4 +53,16 @@ void AShootingHUD::BeginPlay()
 void AShootingHUD::UpdateAmmo(int current, int Magazine, int maxAmmount)
 {
 	AmmoWidget->UpdateAmmo(current,Magazine, maxAmmount);
+}
+
+void AShootingHUD::SetCrossWidgetVisible(bool isVisible)
+{
+	if(isVisible)
+	{
+		CrossWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		CrossWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }

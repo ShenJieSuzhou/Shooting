@@ -44,7 +44,7 @@ AWeaponGlock::AWeaponGlock()
 	ReloadTime = 1.5;
 }
 
-void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh)
+void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 {
 	// ≤•∑≈…˘“Ù
 	FString GunShotSound = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Gunshot.Gunshot'"));
@@ -54,25 +54,44 @@ void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh)
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
 
-	// Load static asset
-	FString GlockFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Glock_Fire_anim_Montage.Arms_Glock_Fire_anim_Montage'"));
-	UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *GlockFireMontage));
-	FireAnimation = assetMontage;
-
-	if (FireAnimation != nullptr)
+	if(!isAimDown)
 	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
-		if (AnimInstance != nullptr)
+		// Load static asset
+		FString GlockFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Glock_Fire_anim_Montage.Arms_Glock_Fire_anim_Montage'"));
+		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *GlockFireMontage));
+		FireAnimation = assetMontage;
+
+		if (FireAnimation != nullptr)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 0.8f);
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 0.8f);
+			}
 		}
 	}
+	else
+	{
+		// Load static asset
+		FString GlockFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Glock_ADS_Fire_anim_Montage.Arms_Glock_ADS_Fire_anim_Montage'"));
+		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *GlockFireMontage));
+		FireAnimation = assetMontage;
 
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 0.8f);
+			}
+		}
+	}
+	
 	// Load static asset
 	FString GlockFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/Glock_Fire_anim.Glock_Fire_anim'"));
 	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *GlockFireAnimation));
-
 	if (assetAnim != nullptr)
 	{
 		FP_Gun->PlayAnimation(assetAnim, false);

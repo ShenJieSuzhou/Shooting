@@ -20,7 +20,7 @@ class SHOOTING_API AWeaponGlock : public AWeaponBase
 public:
 	AWeaponGlock();
 
-	void OnFire(USkeletalMeshComponent* SkMesh);
+	void OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown);
 
 	void OnReload(USkeletalMeshComponent* SkMesh);
 

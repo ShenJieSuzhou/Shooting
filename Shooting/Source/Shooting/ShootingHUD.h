@@ -15,6 +15,7 @@ class AShootingHUD : public AHUD
 
 public:
 	UAmmoWidget* AmmoWidget;
+	UCrossHairWidget* CrossWidget;
 public:
 	AShootingHUD();
 
@@ -24,6 +25,8 @@ public:
 	virtual void BeginPlay() override;
 
 	void UpdateAmmo(int current, int Magazine, int maxAmmount);
+
+	void SetCrossWidgetVisible(bool isVisible);
 private:
 	/** Crosshair asset pointer */
 	class UTexture2D* CrosshairTex;

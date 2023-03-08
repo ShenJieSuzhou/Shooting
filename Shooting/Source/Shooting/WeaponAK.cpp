@@ -46,12 +46,9 @@ AWeaponAK::AWeaponAK()
 void AWeaponAK::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//AShootingHUD* hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	//hud->UpdateAmmo(AmmoCount, MagazineAmmo, MaxAmmoCount);
 }
 
-void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
+void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 {
 	// ≤•∑≈…˘“Ù
 	FString GunShotSound = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Gunshot.Gunshot'"));
@@ -61,21 +58,39 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh)
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
 
-	// Load static asset
-	FString AKFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim_Montage.Arms_AK_Fire_anim_Montage'"));
-	UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *AKFireMontage));
-	FireAnimation = assetMontage;
-
-	if (FireAnimation != nullptr)
+	if(!isAimDown)
 	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
-		if (AnimInstance != nullptr)
+		FString AKFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_Fire_anim_Montage.Arms_AK_Fire_anim_Montage'"));
+		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *AKFireMontage));
+		FireAnimation = assetMontage;
+
+		if (FireAnimation != nullptr)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 0.8f);
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 0.8f);
+			}
 		}
 	}
+	else
+	{
+		FString AKFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AK_ADS_Fire_anim_Montage.Arms_AK_ADS_Fire_anim_Montage'"));
+		UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *AKFireMontage));
+		FireAnimation = assetMontage;
 
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 0.8f);
+			}
+		}
+	}
+	
 	// Load static asset
 	FString AKFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AK_Fire_anim.AK_Fire_anim'"));
 	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AKFireAnimation));

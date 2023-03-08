@@ -22,7 +22,7 @@ public:
 
 	virtual void BeginPlay() override;
 
-	void OnFire(USkeletalMeshComponent* SkMesh);
+	void OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown);
 
 	void OnReload(USkeletalMeshComponent* SkMesh);
 
