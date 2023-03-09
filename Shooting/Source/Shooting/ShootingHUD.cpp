@@ -48,6 +48,7 @@ void AShootingHUD::BeginPlay()
 	TSubclassOf<UAmmoWidget> AmmoWidgetClass = LoadClass<UAmmoWidget>(NULL, *AmmoWidgetPath);
 	AmmoWidget = CreateWidget<UAmmoWidget>(GetWorld(), AmmoWidgetClass);
 	AmmoWidget->AddToViewport();
+	AmmoWidget->InitItems();
 }
 
 void AShootingHUD::UpdateAmmo(int current, int Magazine, int maxAmmount)

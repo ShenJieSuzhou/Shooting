@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/TextBlock.h"
+#include "Components/Border.h"
+#include "Components/Image.h"
+#include "GunInventory.h"
+#include "GunItem.h"
 #include "AmmoWidget.generated.h"
 
 /**
@@ -14,6 +19,8 @@ UCLASS()
 class SHOOTING_API UAmmoWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+	virtual bool Initialize() override;
 	
 public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -25,8 +32,20 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TotalAmmo;
 
+	// Ç¹Ðµ±³°üÖ¸Ê¾
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UGunItem* RifleLight;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UGunItem* PistoLight;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UGunItem* KnifeLight;
 
 public:
+	void InitItems();
+
 	void UpdateAmmo(int current, int Magazine, int maxAmmount);
 
+	void UpdateWeaponsInventory(GunInventory* inventory);
 };

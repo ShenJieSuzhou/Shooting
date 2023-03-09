@@ -10,6 +10,7 @@
 #include "WeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ShootingHUD.h"
+#include "GunInventory.h"
 #include "ShootingCharacter.generated.h"
 
 class UInputComponent;
@@ -109,10 +110,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int WeaponType;
 
-	bool IsReloading;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsAimDown;
+
+	bool IsReloading;
 
 	// Weapon Current
 	AWeaponBase* CurrentWeapon;
@@ -132,6 +133,9 @@ public:
 	FTimerHandle TimerHandle;
 
 	AShootingHUD* hud;
+
+	// ÎäÆ÷±³°ü
+	GunInventory* inventory;
 
 	bool doOnce;
 
