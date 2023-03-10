@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AmmoWidget.h"
+#include "GunItem.h"
 
 void UGunItem::SetImage(UTexture2D* selected, UTexture2D* UnSelected)
 {
