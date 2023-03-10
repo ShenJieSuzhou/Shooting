@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -40,6 +41,14 @@ AShootingCharacter::AShootingCharacter()
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+
+	OverlapCollision = CreateDefaultSubobject<USphereComponent>(TEXT("OverlapCollision"));
+	OverlapCollision->SetupAttachment(GetCapsuleComponent());
+	OverlapCollision->InitSphereRadius(100.0f);
+	OverlapCollision->BodyInstance.SetCollisionProfileName("WeaponCollision");
+	OverlapCollision->OnComponentHit.AddDynamic(this, &AShootingCharacter::OnHit);
+	OverlapCollision->OnComponentBeginOverlap.AddDynamic(this, &AShootingCharacter::OnSphereOverlap);
+	OverlapCollision->OnComponentEndOverlap.AddDynamic(this, &AShootingCharacter::OnSphereEndOverlap);
 
 	// Default offset from the character location for projectiles to spawn
 	//GunOffset = FVector(100.0f, 0.0f, 10.0f);
@@ -78,23 +87,28 @@ void AShootingCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	// Load Weapon
-	SetWeapons();
+	//SetWeapons();
+	WeaponRifle = NULL;
+	WeaponPisto = NULL;
+	WeaponKnife = NULL;
+
 	doOnce = false;
 	WeaponChanged = false;
 	IsReloading = false;
-	WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-	WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-	WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+
+	//WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	//WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	//WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
 	
-	CurrentWeapon = WeaponRifle;
-	CurWeaponType = EWeapon::EW_AK;
-	WeaponType = 0;
+	// Ã»ÓÐÎäÆ÷
+	WeaponType = 3;
+	CurWeaponType = EWeapon::EW_None;
 	IsAimDown = false;
 
-	Mesh1P->SetHiddenInGame(false, true);
-	WeaponRifle->FP_Gun->SetHiddenInGame(false);
-	WeaponPisto->FP_Gun->SetHiddenInGame(true);
-	WeaponKnife->FP_Gun->SetHiddenInGame(true);
+	//Mesh1P->SetHiddenInGame(false, true);
+	//WeaponRifle->FP_Gun->SetHiddenInGame(false);
+	//WeaponPisto->FP_Gun->SetHiddenInGame(true);
+	//WeaponKnife->FP_Gun->SetHiddenInGame(true);
 
 	hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 }
@@ -124,7 +138,6 @@ void AShootingCharacter::SetWeapons()
 		}
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -171,6 +184,11 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 void AShootingCharacter::OnHoldRifle()
 {
+	if(!WeaponRifle)
+	{
+		return;
+	}
+
 	if(!IsReloading)
 	{
 		CurrentWeapon = WeaponRifle;
@@ -186,6 +204,11 @@ void AShootingCharacter::OnHoldRifle()
 
 void AShootingCharacter::OnHoldPisto()
 {
+	if (!WeaponPisto)
+	{
+		return;
+	}
+
 	if (!IsReloading)
 	{
 		CurrentWeapon = WeaponPisto;
@@ -201,6 +224,11 @@ void AShootingCharacter::OnHoldPisto()
 
 void AShootingCharacter::OnHoldKnife()
 {
+	if (!WeaponKnife)
+	{
+		return;
+	}
+
 	if (!IsReloading)
 	{
 		WeaponChanged = false;
@@ -217,12 +245,25 @@ void AShootingCharacter::OnHoldKnife()
 
 void AShootingCharacter::OnFire()
 {
+	if (CurWeaponType == EWeapon::EW_None)
+	{
+		return;
+	}
+
 	if(CurWeaponType == EWeapon::EW_Knife)
 	{
+		if (!WeaponKnife)
+		{
+			return;
+		}
 		WeaponKnife->OnFire(Mesh1P);
 	}
 	else if(CurWeaponType == EWeapon::EW_AK)
 	{
+		if (!WeaponRifle)
+		{
+			return;
+		}
 		if(!IsReloading)
 		{
 			if (WeaponRifle->OnCheckAmmo())
@@ -233,6 +274,10 @@ void AShootingCharacter::OnFire()
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
+		if (!WeaponPisto)
+		{
+			return;
+		}
 		if (!IsReloading)
 		{
 			if (WeaponPisto->OnCheckAmmo())
@@ -245,12 +290,22 @@ void AShootingCharacter::OnFire()
 
 void AShootingCharacter::OnReload()
 {
+	if (CurWeaponType == EWeapon::EW_None)
+	{
+		return;
+	}
+
 	if (CurWeaponType == EWeapon::EW_Knife)
 	{
-		
+		// Knife need not reload
 	}
 	else if (CurWeaponType == EWeapon::EW_AK)
 	{
+		if(!WeaponRifle)
+		{
+			return;
+		}
+
 		if(WeaponRifle->MaxAmmoCount != 0)
 		{
 			if(!doOnce)
@@ -283,6 +338,10 @@ void AShootingCharacter::OnReload()
 	}
 	else if (CurWeaponType == EWeapon::EW_Pisto)
 	{
+		if (!WeaponPisto)
+		{
+			return;
+		}
 		if(WeaponPisto->MaxAmmoCount != 0)
 		{
 			if (!doOnce)
@@ -315,14 +374,42 @@ void AShootingCharacter::OnReload()
 	}
 }
 
+void AShootingCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	
+}
+
+
+void AShootingCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OterComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+
+}
+
+void AShootingCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
+}
+
+
+
 void AShootingCharacter::OnAimDownSight()
 {
+	if (CurWeaponType == EWeapon::EW_None)
+	{
+		return;
+	}
+
 	IsAimDown = true;
 	hud->SetCrossWidgetVisible(false);
 }
 
 void AShootingCharacter::OnRecoverAimDownSight()
 {
+	if (CurWeaponType == EWeapon::EW_None)
+	{
+		return;
+	}
+
 	IsAimDown = false;
 	hud->SetCrossWidgetVisible(true);
 }

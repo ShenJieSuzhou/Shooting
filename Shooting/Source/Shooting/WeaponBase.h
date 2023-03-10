@@ -15,6 +15,17 @@ class USceneComponent;
 class UAnimMontage;
 class USoundBase;
 
+UENUM()
+enum class EWeapon : uint8
+{	
+	EW_None,
+	EW_Knife,
+	EW_AK,
+	EW_AWP,
+	EW_M1,
+	EW_Pisto
+};
+
 UCLASS()
 class SHOOTING_API AWeaponBase : public AActor
 {

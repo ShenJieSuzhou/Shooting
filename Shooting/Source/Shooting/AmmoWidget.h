@@ -10,6 +10,7 @@
 #include "Components/Image.h"
 #include "GunInventory.h"
 #include "GunItem.h"
+#include "WeaponBase.h"
 #include "AmmoWidget.generated.h"
 
 /**
@@ -32,6 +33,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TotalAmmo;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* WeaponTip;
+
 	// Ç¹Ðµ±³°üÖ¸Ê¾
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UGunItem* RifleLight;
@@ -48,4 +52,8 @@ public:
 	void UpdateAmmo(int current, int Magazine, int maxAmmount);
 
 	void UpdateWeaponsInventory(GunInventory* inventory);
+
+	void ShowTip(EWeapon weaponType);
+
+	void HiddenTip();
 };

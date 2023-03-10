@@ -70,3 +70,29 @@ void UAmmoWidget::UpdateWeaponsInventory(GunInventory* inventory)
 {
 	RifleLight->SetIsEnabled(false);
 }
+
+void UAmmoWidget::ShowTip(EWeapon weaponType)
+{
+	FString tip = TEXT("");
+	if(weaponType == EWeapon::EW_AK)
+	{
+		tip = TEXT("Press E to pick up AK47");
+	}
+	else if(weaponType == EWeapon::EW_Pisto)
+	{
+		tip = TEXT("Press E to pick up Glock");
+	}
+	else if(weaponType == EWeapon::EW_Knife)
+	{
+		tip = TEXT("Press E to pick up Army Knife");
+	}
+
+	WeaponTip->SetText(FText::FromString(tip));
+	WeaponTip->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UAmmoWidget::HiddenTip()
+{
+	WeaponTip->SetText(FText::FromString(""));
+	WeaponTip->SetVisibility(ESlateVisibility::Hidden);
+}

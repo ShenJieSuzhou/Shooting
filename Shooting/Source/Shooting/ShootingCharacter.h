@@ -20,16 +20,7 @@ class UCameraComponent;
 class UMotionControllerComponent;
 class UAnimMontage;
 class USoundBase;
-
-UENUM()
-enum class EWeapon : uint8
-{
-	EW_Knife,
-	EW_AK,
-	EW_AWP,
-	EW_M1,
-	EW_Pisto
-};
+class USphereComponent;
 
 
 UCLASS(config=Game)
@@ -68,6 +59,9 @@ public:
 	/** Motion controller (left hand) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UMotionControllerComponent* L_MotionController;
+
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* OverlapCollision;
 
 public:
 	AShootingCharacter();
@@ -225,5 +219,15 @@ public:
 
 	// Init weapon
 	void SetWeapons();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION() 
+	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OterComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION() 
+	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 };
 
