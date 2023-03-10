@@ -382,7 +382,7 @@ void AShootingCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 
 void AShootingCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OterComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	//this->GetOverlappingActors()
 }
 
 void AShootingCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
