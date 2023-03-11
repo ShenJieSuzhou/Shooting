@@ -96,9 +96,7 @@ void AShootingCharacter::BeginPlay()
 	WeaponChanged = false;
 	IsReloading = false;
 
-	//WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-	//WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-	//WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+	
 	
 	// 没有武器
 	WeaponType = 3;
@@ -114,28 +112,65 @@ void AShootingCharacter::BeginPlay()
 	hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 }
 
-void AShootingCharacter::SetWeapons()
+void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 {
-	//Blueprint
-	//UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
-	//UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
-	//UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
-
-	UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponKnife'"));
-	UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponAK'"));
-	UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponGlock'"));
-
-	UWorld* const World = GetWorld();
-	FVector Localtion = FVector(0.f, 0.f, 0.f);
-	FRotator Rotator = FRotator(0.f);
-	
-	if(WeaponKnifeClass != nullptr && WeaponRifleClass != nullptr && WeaponPistoClass != nullptr)
+	if(WeaponT == EWeapon::EW_Knife)
 	{
-		if(World != nullptr)
+		UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponKnife'"));
+		UWorld* const World = GetWorld();
+		FVector Localtion = FVector(0.f, 0.f, 0.f);
+		FRotator Rotator = FRotator(0.f);
+
+		if (WeaponKnifeClass != nullptr)
 		{
-			WeaponKnife = Cast<AWeaponKnife>(World->SpawnActor<AWeaponBase>(WeaponKnifeClass, FVector(8.9f, 2.0f, -2.7f), Rotator));
-			WeaponPisto = Cast<AWeaponGlock>(World->SpawnActor<AWeaponBase>(WeaponPistoClass, Localtion, Rotator));
-			WeaponRifle = Cast<AWeaponAK>(World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator));
+			if (World != nullptr)
+			{
+				WeaponKnife = Cast<AWeaponKnife>(World->SpawnActor<AWeaponBase>(WeaponKnifeClass, FVector(8.9f, 2.0f, -2.7f), Rotator));
+				WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+				
+				// 手持军刀
+				this->OnHoldKnife();
+			}
+		}
+	}
+	else if(WeaponT == EWeapon::EW_AK)
+	{
+		UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponAK'"));
+
+		UWorld* const World = GetWorld();
+		FVector Localtion = FVector(0.f, 0.f, 0.f);
+		FRotator Rotator = FRotator(0.f);
+
+		if (WeaponRifleClass != nullptr)
+		{
+			if (World != nullptr)
+			{
+				WeaponRifle = Cast<AWeaponAK>(World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator));
+				WeaponRifle->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+				
+				// 手持AK
+				this->OnHoldRifle();
+			}
+		}
+	}
+	else if(WeaponT == EWeapon::EW_Pisto)
+	{
+		UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponGlock'"));
+
+		UWorld* const World = GetWorld();
+		FVector Localtion = FVector(0.f, 0.f, 0.f);
+		FRotator Rotator = FRotator(0.f);
+
+		if (WeaponPistoClass != nullptr)
+		{
+			if (World != nullptr)
+			{
+				WeaponPisto = Cast<AWeaponGlock>(World->SpawnActor<AWeaponBase>(WeaponPistoClass, Localtion, Rotator));
+				WeaponPisto->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+				
+				// 手持Glock
+				this->OnHoldPisto();
+			}
 		}
 	}
 }
@@ -201,8 +236,16 @@ void AShootingCharacter::OnHoldRifle()
 		CurrentWeapon = WeaponRifle;
 
 		WeaponRifle->FP_Gun->SetHiddenInGame(false);
-		WeaponPisto->FP_Gun->SetHiddenInGame(true);
-		WeaponKnife->FP_Gun->SetHiddenInGame(true);
+		if(WeaponPisto)
+		{
+			WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if(WeaponKnife)
+		{
+			WeaponKnife->FP_Gun->SetHiddenInGame(true);
+		}
+		
 		CurWeaponType = EWeapon::EW_AK;
 		WeaponType = 0;
 		hud->UpdateAmmo(CurrentWeapon->AmmoCount, CurrentWeapon->MagazineAmmo, CurrentWeapon->MaxAmmoCount);
@@ -220,8 +263,16 @@ void AShootingCharacter::OnHoldPisto()
 	{
 		CurrentWeapon = WeaponPisto;
 
-		WeaponKnife->FP_Gun->SetHiddenInGame(true);
-		WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		if(WeaponKnife)
+		{
+			WeaponKnife->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if(WeaponRifle)
+		{
+			WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		}
+		
 		WeaponPisto->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Pisto;
 		WeaponType = 1;
@@ -240,9 +291,16 @@ void AShootingCharacter::OnHoldKnife()
 	{
 		WeaponChanged = false;
 		CurrentWeapon = WeaponKnife;
-
-		WeaponRifle->FP_Gun->SetHiddenInGame(true);
-		WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		if(WeaponRifle)
+		{
+			WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		}
+		
+		if(WeaponPisto)
+		{
+			WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		}
+		
 		WeaponKnife->FP_Gun->SetHiddenInGame(false);
 		CurWeaponType = EWeapon::EW_Knife;
 		WeaponType = 2;
@@ -389,9 +447,10 @@ void AShootingCharacter::OnPickUp()
 	}
 
 	CollisionActor->Destroy();
-	if (CurrOverlapWeapon == EWeapon::EW_Knife)
+	this->SetWeapons(CurrOverlapWeapon);
+	/*if (CurrOverlapWeapon == EWeapon::EW_Knife)
 	{
-		
+
 	}
 	else if (CurrOverlapWeapon == EWeapon::EW_AK)
 	{
@@ -400,7 +459,7 @@ void AShootingCharacter::OnPickUp()
 	else if (CurrOverlapWeapon == EWeapon::EW_Knife)
 	{
 
-	}
+	}*/
 }
 
 void AShootingCharacter::OnDropDown()
