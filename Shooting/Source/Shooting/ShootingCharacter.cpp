@@ -103,6 +103,7 @@ void AShootingCharacter::BeginPlay()
 	// Ã»ÓÐÎäÆ÷
 	WeaponType = 3;
 	CurWeaponType = EWeapon::EW_None;
+	CurrOverlapWeapon = EWeapon::EW_None;
 	IsAimDown = false;
 
 	//Mesh1P->SetHiddenInGame(false, true);
@@ -159,6 +160,12 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
+
+	// Pickup Weapon
+	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AShootingCharacter::OnPickUp);
+
+	// Drop Weapon
+	PlayerInputComponent->BindAction("DropDown", IE_Pressed, this, &AShootingCharacter::OnDropDown);
 
 	//// Bind aim down
 	//PlayerInputComponent->BindAction("AimDown", IE_Pressed, this, &AShootingCharacter::OnAimDownSight);
@@ -374,6 +381,35 @@ void AShootingCharacter::OnReload()
 	}
 }
 
+void AShootingCharacter::OnPickUp()
+{
+	if (CurrOverlapWeapon == EWeapon::EW_None)
+	{
+		return;
+	}
+
+	CollisionActor->Destroy();
+	if (CurrOverlapWeapon == EWeapon::EW_Knife)
+	{
+		
+	}
+	else if (CurrOverlapWeapon == EWeapon::EW_AK)
+	{
+
+	}
+	else if (CurrOverlapWeapon == EWeapon::EW_Knife)
+	{
+
+	}
+}
+
+void AShootingCharacter::OnDropDown()
+{
+	// Drop Current Weapon
+	//CurrentWeapon
+}
+
+
 void AShootingCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	
@@ -382,21 +418,28 @@ void AShootingCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 
 void AShootingCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OterComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//this->GetOverlappingActors()
 	if(Cast<AWeaponBase>(OtherActor) == nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("NULL"));
 		return;
 	}
 
-	AWeaponBase* weapon = Cast<AWeaponBase>(OtherActor);
-
-	UE_LOG(LogTemp, Log, TEXT("Name %d"), weapon->WeaponType);
+	CollisionActor = OtherActor;
+	AWeaponBase* Weapon = Cast<AWeaponBase>(OtherActor);
+	CurrOverlapWeapon = Weapon->WeaponType;
+	hud->AmmoWidget->ShowTip(Weapon->WeaponType);
 }
 
 void AShootingCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	
+	if (Cast<AWeaponBase>(OtherActor) == nullptr)
+	{
+		UE_LOG(LogTemp, Log, TEXT("NULL"));
+		return;
+	}
+
+	AWeaponBase* Weapon = Cast<AWeaponBase>(OtherActor);
+	hud->AmmoWidget->HiddenTip();
 }
 
 

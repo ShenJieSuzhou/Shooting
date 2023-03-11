@@ -128,6 +128,12 @@ public:
 
 	AShootingHUD* hud;
 
+	// 当前碰撞到的武器类型
+	EWeapon CurrOverlapWeapon;
+
+	// 当前碰撞到的Actor
+	AActor* CollisionActor;
+
 	// 武器背包
 	GunInventory* inventory;
 
@@ -139,6 +145,10 @@ protected:
 	void OnFire();
 
 	void OnReload();
+
+	void OnPickUp();
+
+	void OnDropDown();
 
 	// Weapon1
 	void OnHoldRifle();
