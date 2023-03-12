@@ -50,6 +50,8 @@ AShootingCharacter::AShootingCharacter()
 	OverlapCollision->OnComponentBeginOverlap.AddDynamic(this, &AShootingCharacter::OnSphereOverlap);
 	OverlapCollision->OnComponentEndOverlap.AddDynamic(this, &AShootingCharacter::OnSphereEndOverlap);
 
+	inventory = CreateDefaultSubobject<GunInventory>(TEXT("Inventory"));
+
 	// Default offset from the character location for projectiles to spawn
 	//GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
@@ -130,6 +132,7 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 				
 				// 手持军刀
 				this->OnHoldKnife();
+				inventory->SetKnife(WeaponKnife);
 			}
 		}
 	}
@@ -150,6 +153,7 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 				
 				// 手持AK
 				this->OnHoldRifle();
+				inventory->SetRifle(WeaponRifle);
 			}
 		}
 	}
@@ -170,6 +174,7 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 				
 				// 手持Glock
 				this->OnHoldPisto();
+				inventory->SetPisto(WeaponPisto);
 			}
 		}
 	}
@@ -448,18 +453,7 @@ void AShootingCharacter::OnPickUp()
 
 	CollisionActor->Destroy();
 	this->SetWeapons(CurrOverlapWeapon);
-	/*if (CurrOverlapWeapon == EWeapon::EW_Knife)
-	{
-
-	}
-	else if (CurrOverlapWeapon == EWeapon::EW_AK)
-	{
-
-	}
-	else if (CurrOverlapWeapon == EWeapon::EW_Knife)
-	{
-
-	}*/
+	hud->AmmoWidget->UpdateWeaponsInventory(inventory);
 }
 
 void AShootingCharacter::OnDropDown()

@@ -69,6 +69,23 @@ void UAmmoWidget::UpdateAmmo(int current, int Magazine, int maxAmmount)
 void UAmmoWidget::UpdateWeaponsInventory(GunInventory* inventory)
 {
 	RifleLight->SetIsEnabled(false);
+	KnifeLight->SetIsEnabled(false);
+	PistoLight->SetIsEnabled(false);
+
+	if(inventory->IsKnifeAvaiable())
+	{
+		KnifeLight->SetIsEnabled(true);
+	}
+
+	if(inventory->IsRifleAvaiable())
+	{
+		RifleLight->SetIsEnabled(true);
+	}
+
+	if(inventory->IsPistoAvaiable())
+	{
+		PistoLight->SetIsEnabled(true);
+	}
 }
 
 void UAmmoWidget::ShowTip(EWeapon weaponType)
