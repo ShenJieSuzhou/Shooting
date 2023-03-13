@@ -465,7 +465,10 @@ void AShootingCharacter::OnPickUp()
 void AShootingCharacter::OnDropDown()
 {
 	// Drop Current Weapon
-	//CurrentWeapon
+	//if(CurWeaponType == EWeapon::EW_None)
+	//{
+
+	//}
 }
 
 
