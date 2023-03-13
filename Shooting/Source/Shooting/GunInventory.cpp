@@ -2,17 +2,24 @@
 
 
 #include "GunInventory.h"
-
+PRAGMA_DISABLE_OPTIMIZATION
 GunInventory::GunInventory()
 {
-	WeaponRifle = NULL;
-	WeaponPisto = NULL;
-	WeaponKnife = NULL;
+
 }
 
 GunInventory::~GunInventory()
 {
-	
+	WeaponRifle = nullptr;
+	WeaponPisto = nullptr;
+	WeaponKnife = nullptr;
+}
+
+void GunInventory::Initialize()
+{
+	WeaponRifle = NULL;
+	WeaponPisto = NULL;
+	WeaponKnife = NULL;
 }
 
 void GunInventory::SetRifle(AWeaponAK* rifle)

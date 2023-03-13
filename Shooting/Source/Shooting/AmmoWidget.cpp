@@ -3,6 +3,13 @@
 
 #include "AmmoWidget.h"
 
+UAmmoWidget::~UAmmoWidget()
+{
+
+}
+
+PRAGMA_DISABLE_OPTIMIZATION
+
 bool UAmmoWidget::Initialize()
 {
 	Super::Initialize();
@@ -22,6 +29,8 @@ void UAmmoWidget::InitItems()
 		{
 			RifleLight->SetImage(selTexture, unSelTexture);
 		}
+
+		RifleLight->SetIsOwned(false);
 	}
 
 	if (PistoLight)
@@ -34,6 +43,8 @@ void UAmmoWidget::InitItems()
 		{
 			PistoLight->SetImage(selTexture, unSelTexture);
 		}
+
+		PistoLight->SetIsOwned(false);
 	}
 
 	if (KnifeLight)
@@ -47,11 +58,8 @@ void UAmmoWidget::InitItems()
 			KnifeLight->SetImage(selTexture, unSelTexture);
 		}
 
+		KnifeLight->SetIsOwned(false);
 	}
-
-	RifleLight->SetIsOwned(false);
-	PistoLight->SetIsOwned(false);
-	KnifeLight->SetIsOwned(false);
 }
 
 void UAmmoWidget::UpdateAmmo(int current, int Magazine, int maxAmmount)
@@ -66,25 +74,25 @@ void UAmmoWidget::UpdateAmmo(int current, int Magazine, int maxAmmount)
 	TotalAmmo->SetText(FText::FromString(sMaxAmmount));
 }
 
-void UAmmoWidget::UpdateWeaponsInventory(GunInventory* inventory)
+void UAmmoWidget::UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, AWeaponKnife* Knife)
 {
-	RifleLight->SetIsEnabled(false);
-	KnifeLight->SetIsEnabled(false);
-	PistoLight->SetIsEnabled(false);
+	RifleLight->SetIsOwned(false);
+	PistoLight->SetIsOwned(false);
+	KnifeLight->SetIsOwned(false);
 
-	if(inventory->IsKnifeAvaiable())
+	if(Knife)
 	{
-		KnifeLight->SetIsEnabled(true);
+		KnifeLight->SetIsOwned(true);
 	}
 
-	if(inventory->IsRifleAvaiable())
+	if(Rifle)
 	{
-		RifleLight->SetIsEnabled(true);
+		RifleLight->SetIsOwned(true);
 	}
 
-	if(inventory->IsPistoAvaiable())
+	if(Pisto)
 	{
-		PistoLight->SetIsEnabled(true);
+		PistoLight->SetIsOwned(true);
 	}
 }
 

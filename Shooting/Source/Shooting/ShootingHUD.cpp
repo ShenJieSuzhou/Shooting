@@ -7,6 +7,12 @@
 #include "CanvasItem.h"
 #include "UObject/ConstructorHelpers.h"
 
+AShootingHUD::~AShootingHUD()
+{
+	AmmoWidget = nullptr;
+	CrossWidget = nullptr;
+}
+
 AShootingHUD::AShootingHUD()
 {
 	// Set the crosshair texture

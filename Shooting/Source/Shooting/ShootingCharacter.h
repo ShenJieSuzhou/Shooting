@@ -27,6 +27,7 @@ UCLASS(config=Game)
 class AShootingCharacter : public ACharacter
 {
 	GENERATED_BODY()
+	~AShootingCharacter();
 public:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category=Mesh)
@@ -135,7 +136,7 @@ public:
 	AActor* CollisionActor;
 
 	// ÎäÆ÷±³°ü
-	GunInventory* inventory;
+	//GunInventory* inventory;
 
 	bool doOnce;
 

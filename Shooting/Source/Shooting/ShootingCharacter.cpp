@@ -14,7 +14,20 @@
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
+PRAGMA_DISABLE_OPTIMIZATION
 
+AShootingCharacter::~AShootingCharacter()
+{
+	//inventory = nullptr;
+	CollisionActor = nullptr;
+	hud = nullptr;
+	CurrentWeapon = nullptr;
+	WeaponRifle = nullptr;
+	WeaponPisto = nullptr;
+	WeaponKnife = nullptr;
+}
+
+PRAGMA_DISABLE_OPTIMIZATION
 //////////////////////////////////////////////////////////////////////////
 // AShootingCharacter
 
@@ -50,7 +63,9 @@ AShootingCharacter::AShootingCharacter()
 	OverlapCollision->OnComponentBeginOverlap.AddDynamic(this, &AShootingCharacter::OnSphereOverlap);
 	OverlapCollision->OnComponentEndOverlap.AddDynamic(this, &AShootingCharacter::OnSphereEndOverlap);
 
-	inventory = CreateDefaultSubobject<GunInventory>(TEXT("Inventory"));
+	// 初始化背包
+	//inventory = NewObject<GunInventory>();
+	//inventory->Initialize();
 
 	// Default offset from the character location for projectiles to spawn
 	//GunOffset = FVector(100.0f, 0.0f, 10.0f);
@@ -97,19 +112,12 @@ void AShootingCharacter::BeginPlay()
 	doOnce = false;
 	WeaponChanged = false;
 	IsReloading = false;
-
-	
 	
 	// 没有武器
 	WeaponType = 3;
 	CurWeaponType = EWeapon::EW_None;
 	CurrOverlapWeapon = EWeapon::EW_None;
 	IsAimDown = false;
-
-	//Mesh1P->SetHiddenInGame(false, true);
-	//WeaponRifle->FP_Gun->SetHiddenInGame(false);
-	//WeaponPisto->FP_Gun->SetHiddenInGame(true);
-	//WeaponKnife->FP_Gun->SetHiddenInGame(true);
 
 	hud = Cast<AShootingHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 }
@@ -132,7 +140,6 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 				
 				// 手持军刀
 				this->OnHoldKnife();
-				inventory->SetKnife(WeaponKnife);
 			}
 		}
 	}
@@ -153,7 +160,6 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 				
 				// 手持AK
 				this->OnHoldRifle();
-				inventory->SetRifle(WeaponRifle);
 			}
 		}
 	}
@@ -174,7 +180,6 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 				
 				// 手持Glock
 				this->OnHoldPisto();
-				inventory->SetPisto(WeaponPisto);
 			}
 		}
 	}
@@ -453,7 +458,8 @@ void AShootingCharacter::OnPickUp()
 
 	CollisionActor->Destroy();
 	this->SetWeapons(CurrOverlapWeapon);
-	hud->AmmoWidget->UpdateWeaponsInventory(inventory);
+	hud->AmmoWidget->UpdateWeaponsInventory(WeaponRifle, WeaponPisto, WeaponKnife);
+	CurrOverlapWeapon = EWeapon::EW_None;
 }
 
 void AShootingCharacter::OnDropDown()

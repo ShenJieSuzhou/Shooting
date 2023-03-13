@@ -15,6 +15,7 @@ UCLASS()
 class SHOOTING_API UGunItem : public UUserWidget
 {
 	GENERATED_BODY()
+	~UGunItem();
 public:
 	void SetImage(UTexture2D* selected, UTexture2D* UnSelected);
 

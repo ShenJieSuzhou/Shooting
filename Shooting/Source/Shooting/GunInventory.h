@@ -18,6 +18,8 @@ public:
 	~GunInventory();
 
 public:
+	void Initialize();
+
 	void SetRifle(AWeaponAK* rifle);
 
 	void SetPisto(AWeaponGlock* pisto);

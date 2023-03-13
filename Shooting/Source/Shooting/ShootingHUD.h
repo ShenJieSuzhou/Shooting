@@ -12,7 +12,7 @@ UCLASS()
 class AShootingHUD : public AHUD
 {
 	GENERATED_BODY()
-
+	~AShootingHUD();
 public:
 	UAmmoWidget* AmmoWidget;
 	UCrossHairWidget* CrossWidget;

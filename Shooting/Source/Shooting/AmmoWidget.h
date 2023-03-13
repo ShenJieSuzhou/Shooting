@@ -20,7 +20,7 @@ UCLASS()
 class SHOOTING_API UAmmoWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
+	~UAmmoWidget();
 	virtual bool Initialize() override;
 	
 public:
@@ -51,9 +51,10 @@ public:
 
 	void UpdateAmmo(int current, int Magazine, int maxAmmount);
 
-	void UpdateWeaponsInventory(GunInventory* inventory);
+	void UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, AWeaponKnife* Knife);
 
 	void ShowTip(EWeapon weaponType);
 
 	void HiddenTip();
 };
+

@@ -3,6 +3,12 @@
 
 #include "GunItem.h"
 
+UGunItem::~UGunItem()
+{
+	Owned = nullptr;
+	NotOwned = nullptr;
+}
+
 void UGunItem::SetImage(UTexture2D* selected, UTexture2D* UnSelected)
 {
 	Owned = selected;
