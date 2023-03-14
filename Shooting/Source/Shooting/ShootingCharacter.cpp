@@ -132,7 +132,21 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 	{
 		UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponKnife'"));
 		
+		UWorld* const World = GetWorld();
+		FVector Localtion = FVector(0.f, 0.f, 0.f);
+		FRotator Rotator = FRotator(0.f);
 
+		if (WeaponKnifeClass != nullptr)
+		{
+			if (World != nullptr)
+			{
+				WeaponKnife = Cast<AWeaponKnife>(World->SpawnActor<AWeaponBase>(WeaponKnifeClass, Localtion, Rotator));
+				WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+
+				// ÊÖ³Ö¾üµ¶
+				this->OnHoldKnife();
+			}
+		}
 	}
 	else if(WeaponT == EWeapon::EW_AK)
 	{
@@ -174,6 +188,8 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 			}
 		}
 	}
+
+	CurWeaponType = WeaponT;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -475,8 +491,7 @@ void AShootingCharacter::OnDropDown()
 
 	if(CurWeaponType == EWeapon::EW_AK)
 	{
-		//UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
-		UClass* WeaponRifleClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AKPickUp_BP.AKPickUp_BP_C'"));
+		UClass* WeaponRifleClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/PickUp_AK_BP.PickUp_AK_BP_C'"));
 		
 		if (WeaponRifleClass != nullptr)
 		{
@@ -486,17 +501,50 @@ void AShootingCharacter::OnDropDown()
 			{
 				SM->AddImpulse(ForwardVector, NAME_None, true);
 			}
-			//Rifle->FP_Gun->AddImpulse(ForwardVector, NAME_None, true); 
-			//WeaponRifle->SetHidden(true);
 		}
+
+		WeaponRifle->Destroy();
+		WeaponRifle = nullptr;
+		WeaponType = 3;
+		CurWeaponType = EWeapon::EW_None;
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
-		UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
+		UClass* WeaponPistoClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/PickUp_Glock_BP.PickUp_Glock_BP_C'"));
+		
+		if (WeaponPistoClass != nullptr)
+		{
+			AActor* Pisto = World->SpawnActor<AActor>(WeaponPistoClass, Localtion, Rotator);
+			UStaticMeshComponent* SM = Cast<UStaticMeshComponent>(Pisto->GetRootComponent());
+			if (SM)
+			{
+				SM->AddImpulse(ForwardVector, NAME_None, true);
+			}
+
+			WeaponPisto->Destroy();
+			WeaponPisto = nullptr;
+			WeaponType = 3;
+			CurWeaponType = EWeapon::EW_None;
+		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Knife)
 	{
-		UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
+		UClass* WeaponKnifeClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/PickUp_Knife_BP.PickUp_Knife_BP_C'"));
+	
+		if (WeaponKnifeClass != nullptr)
+		{
+			AActor* Knife = World->SpawnActor<AActor>(WeaponKnifeClass, Localtion, Rotator);
+			UStaticMeshComponent* SM = Cast<UStaticMeshComponent>(Knife->GetRootComponent());
+			if (SM)
+			{
+				SM->AddImpulse(ForwardVector, NAME_None, true);
+			}
+
+			WeaponKnife->Destroy();
+			WeaponKnife = nullptr;
+			WeaponType = 3;
+			CurWeaponType = EWeapon::EW_None;
+		}
 	}
 }
 
@@ -509,27 +557,27 @@ void AShootingCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 
 void AShootingCharacter::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OterComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(Cast<AWeaponBase>(OtherActor) == nullptr)
+	if(Cast<APickUpWeaponBase>(OtherActor) == nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("NULL"));
 		return;
 	}
 
 	CollisionActor = OtherActor;
-	AWeaponBase* Weapon = Cast<AWeaponBase>(OtherActor);
+	APickUpWeaponBase* Weapon = Cast<APickUpWeaponBase>(OtherActor);
 	CurrOverlapWeapon = Weapon->WeaponType;
-	hud->AmmoWidget->ShowTip(Weapon->WeaponType);
+	hud->AmmoWidget->ShowTip(CurrOverlapWeapon);
 }
 
 void AShootingCharacter::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<AWeaponBase>(OtherActor) == nullptr)
+	if (Cast<APickUpWeaponBase>(OtherActor) == nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("NULL"));
 		return;
 	}
 
-	AWeaponBase* Weapon = Cast<AWeaponBase>(OtherActor);
+	APickUpWeaponBase* Weapon = Cast<APickUpWeaponBase>(OtherActor);
 	hud->AmmoWidget->HiddenTip();
 }
 

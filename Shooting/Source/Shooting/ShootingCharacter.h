@@ -8,6 +8,7 @@
 #include "WeaponAK.h"
 #include "WeaponGlock.h"
 #include "WeaponBase.h"
+#include "PickUpWeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ShootingHUD.h"
 #include "GunInventory.h"
