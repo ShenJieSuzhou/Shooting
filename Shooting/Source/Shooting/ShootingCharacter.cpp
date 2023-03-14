@@ -475,23 +475,28 @@ void AShootingCharacter::OnDropDown()
 
 	if(CurWeaponType == EWeapon::EW_AK)
 	{
-		UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
+		//UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
+		UClass* WeaponRifleClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AKPickUp_BP.AKPickUp_BP_C'"));
+		
 		if (WeaponRifleClass != nullptr)
 		{
-			AWeaponBase* Rifle = World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator);
-			Rifle->FP_Gun->AddImpulse(ForwardVector, NAME_None, true); 
-			WeaponRifle->SetHidden(true);
+			AActor* Rifle = World->SpawnActor<AActor>(WeaponRifleClass, Localtion, Rotator);
+			UStaticMeshComponent* SM = Cast<UStaticMeshComponent>(Rifle->GetRootComponent());
+			if (SM)
+			{
+				SM->AddImpulse(ForwardVector, NAME_None, true);
+			}
+			//Rifle->FP_Gun->AddImpulse(ForwardVector, NAME_None, true); 
+			//WeaponRifle->SetHidden(true);
 		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
 	{
 		UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
-	
 	}
 	else if(CurWeaponType == EWeapon::EW_Knife)
 	{
 		UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
-	
 	}
 }
 
