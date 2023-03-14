@@ -18,7 +18,6 @@ PRAGMA_DISABLE_OPTIMIZATION
 
 AShootingCharacter::~AShootingCharacter()
 {
-	//inventory = nullptr;
 	CollisionActor = nullptr;
 	hud = nullptr;
 	CurrentWeapon = nullptr;
@@ -62,6 +61,11 @@ AShootingCharacter::AShootingCharacter()
 	OverlapCollision->OnComponentHit.AddDynamic(this, &AShootingCharacter::OnHit);
 	OverlapCollision->OnComponentBeginOverlap.AddDynamic(this, &AShootingCharacter::OnSphereOverlap);
 	OverlapCollision->OnComponentEndOverlap.AddDynamic(this, &AShootingCharacter::OnSphereEndOverlap);
+
+	// Drop Weapon Point
+	DropPoint = CreateDefaultSubobject<USceneComponent>(TEXT("DropPoint"));
+	DropPoint->SetupAttachment(GetCapsuleComponent());
+	DropPoint->SetWorldLocation(FVector(70.f, 0.f, 40.f));
 
 	// 初始化背包
 	//inventory = NewObject<GunInventory>();
@@ -127,21 +131,8 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 	if(WeaponT == EWeapon::EW_Knife)
 	{
 		UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponKnife'"));
-		UWorld* const World = GetWorld();
-		FVector Localtion = FVector(0.f, 0.f, 0.f);
-		FRotator Rotator = FRotator(0.f);
+		
 
-		if (WeaponKnifeClass != nullptr)
-		{
-			if (World != nullptr)
-			{
-				WeaponKnife = Cast<AWeaponKnife>(World->SpawnActor<AWeaponBase>(WeaponKnifeClass, FVector(8.9f, 2.0f, -2.7f), Rotator));
-				WeaponKnife->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
-				
-				// 手持军刀
-				this->OnHoldKnife();
-			}
-		}
 	}
 	else if(WeaponT == EWeapon::EW_AK)
 	{
@@ -463,12 +454,45 @@ void AShootingCharacter::OnPickUp()
 }
 
 void AShootingCharacter::OnDropDown()
-{
+{	
 	// Drop Current Weapon
-	//if(CurWeaponType == EWeapon::EW_None)
-	//{
+	if (CurWeaponType == EWeapon::EW_None)
+	{
+		return;
+	}
 
-	//}
+	FVector Localtion = DropPoint->GetComponentLocation();
+	FVector Scale = DropPoint->GetComponentScale();
+	float RandValue = FMath::FRandRange(-180, 180);
+	FRotator Rotator = FRotator(RandValue);
+	FVector ForwardVector = DropPoint->GetForwardVector() * 500;
+
+	UWorld* const World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	if(CurWeaponType == EWeapon::EW_AK)
+	{
+		UClass* WeaponRifleClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/AK_BP.AK_BP_C'"));
+		if (WeaponRifleClass != nullptr)
+		{
+			AWeaponBase* Rifle = World->SpawnActor<AWeaponBase>(WeaponRifleClass, Localtion, Rotator);
+			Rifle->FP_Gun->AddImpulse(ForwardVector, NAME_None, true); 
+			WeaponRifle->SetHidden(true);
+		}
+	}
+	else if(CurWeaponType == EWeapon::EW_Pisto)
+	{
+		UClass* WeaponPistoClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/Glock_BP.Glock_BP_C'"));
+	
+	}
+	else if(CurWeaponType == EWeapon::EW_Knife)
+	{
+		UClass* WeaponKnifeClass = LoadClass<AWeaponBase>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/knife_BP.knife_BP_C'"));
+	
+	}
 }
 
 
