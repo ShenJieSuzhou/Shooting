@@ -106,6 +106,11 @@ void AWeaponGlock::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 	CameraShotLineTrace();
 }
 
+void AWeaponGlock::OnStopFire()
+{
+
+}
+
 
 void AWeaponGlock::CameraShotLineTrace()
 {

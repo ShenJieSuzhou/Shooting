@@ -212,7 +212,8 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShootingCharacter::OnFire);
-
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AShootingCharacter::OnStopFire);
+	
 	// Pickup Weapon
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AShootingCharacter::OnPickUp);
 
@@ -338,6 +339,7 @@ void AShootingCharacter::OnFire()
 		{
 			return;
 		}
+
 		WeaponKnife->OnFire(Mesh1P);
 	}
 	else if(CurWeaponType == EWeapon::EW_AK)
@@ -352,6 +354,7 @@ void AShootingCharacter::OnFire()
 			{
 				WeaponRifle->OnFire(Mesh1P, IsAimDown);
 			}
+			GetWorldTimerManager().SetTimer(AutomaticHandle, this, &AShootingCharacter::OnFire, 0.12f, true);
 		}
 	}
 	else if(CurWeaponType == EWeapon::EW_Pisto)
@@ -369,6 +372,17 @@ void AShootingCharacter::OnFire()
 		}	
 	}
 }
+
+void AShootingCharacter::OnStopFire()
+{
+	if (CurWeaponType == EWeapon::EW_None)
+	{
+		return;
+	}
+	
+	GetWorldTimerManager().ClearTimer(AutomaticHandle);
+}
+
 
 void AShootingCharacter::OnReload()
 {

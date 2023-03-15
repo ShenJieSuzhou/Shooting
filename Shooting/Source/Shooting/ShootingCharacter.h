@@ -144,10 +144,14 @@ public:
 
 	bool doOnce;
 
+	FTimerHandle AutomaticHandle;
+
 protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	void OnStopFire();
 
 	void OnReload();
 
@@ -178,7 +182,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void ReloadMagazine();
-
 
 	///** Resets HMD orientation and position in VR. */
 	//void OnResetVR();

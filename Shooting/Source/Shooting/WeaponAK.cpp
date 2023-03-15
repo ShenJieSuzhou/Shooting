@@ -109,6 +109,12 @@ void AWeaponAK::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 	CameraShotLineTrace();
 }
 
+
+void AWeaponAK::OnStopFire()
+{
+	
+}
+
 void AWeaponAK::CameraShotLineTrace()
 {
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));

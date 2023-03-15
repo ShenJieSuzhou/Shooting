@@ -22,6 +22,8 @@ public:
 
 	void OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown);
 
+	void OnStopFire();
+
 	void OnReload(USkeletalMeshComponent* SkMesh);
 
 	bool OnCheckAmmo();
