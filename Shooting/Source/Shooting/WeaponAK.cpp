@@ -19,7 +19,7 @@ AWeaponAK::AWeaponAK()
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
 			FP_MuzzleLocation->SetWorldLocation(FVector(70.2f, -2.0f, 9.0f));
-			FP_PointLight->SetWorldLocation(FVector(60.0f, -10.0f, 0.f));
+			FP_PointLight->SetWorldLocation(FVector(100.0f, -130.0f, 20.f));
 
 			FString GunMuzzle = FString(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/FlashPlane.plane_ground_3x3'"));
 			UStaticMesh* mesh = Cast<UStaticMesh>(LoadObject<UStaticMesh>(nullptr, *GunMuzzle));

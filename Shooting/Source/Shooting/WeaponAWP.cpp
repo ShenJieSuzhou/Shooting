@@ -19,7 +19,7 @@ AWeaponAWP::AWeaponAWP()
 		if(assetSkeletal.Succeeded())
 		{
 			FP_Gun->SetSkeletalMesh(assetSkeletal.Object);
-			FP_MuzzleLocation->SetWorldLocation(FVector(17.0f, 0, 7.0f));
+			FP_MuzzleLocation->SetWorldLocation(FVector(109.0f, -2.0f, 9.0f));
 			FP_PointLight->SetWorldLocation(FVector(39.0f, -5.0f, 5.f));
 
 			FString GunMuzzle = FString(TEXT("StaticMesh'/Game/ShootingPawn/Meshs/FlashPlane.plane_ground_3x3'"));
@@ -27,8 +27,8 @@ AWeaponAWP::AWeaponAWP()
 			FP_FlashPlane->SetStaticMesh(mesh);
 			FP_FlashPlane->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			FP_FlashPlane->SetWorldRotation(FRotator(90.f, 90.f, 90.f));
-			FP_FlashPlane->SetWorldLocation(FVector(22.f, 1, 7.37f));
-			FP_FlashPlane->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
+			FP_FlashPlane->SetWorldLocation(FVector(109.f, 1, 8.37f));
+			FP_FlashPlane->SetWorldScale3D(FVector(0.15f, 0.15f, 0.15f));
 		}
 	}
 

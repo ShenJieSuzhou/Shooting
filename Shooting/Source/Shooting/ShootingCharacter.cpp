@@ -447,6 +447,20 @@ void AShootingCharacter::OnFire()
 			}
 		}	
 	}
+	else if (CurWeaponType == EWeapon::EW_AWP)
+	{
+		if (!WeaponSniper)
+		{
+			return;
+		}
+		if (!IsReloading)
+		{
+			if (WeaponSniper->OnCheckAmmo())
+			{
+				WeaponSniper->OnFire(Mesh1P, IsAimDown);
+			}
+		}
+	}
 }
 
 void AShootingCharacter::OnStopFire()
@@ -668,6 +682,25 @@ void AShootingCharacter::OnDropDown()
 
 			WeaponKnife->Destroy();
 			WeaponKnife = nullptr;
+			WeaponType = 3;
+			CurWeaponType = EWeapon::EW_None;
+		}
+	}
+	else if (CurWeaponType == EWeapon::EW_AWP)
+	{
+		UClass* WeaponSniperClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/PickUp_AWP_BP.PickUp_AWP_BP_C'"));
+
+		if (WeaponSniperClass != nullptr)
+		{
+			AActor* Sniper = World->SpawnActor<AActor>(WeaponSniperClass, Localtion, Rotator);
+			UStaticMeshComponent* SM = Cast<UStaticMeshComponent>(Sniper->GetRootComponent());
+			if (SM)
+			{
+				SM->AddImpulse(ForwardVector, NAME_None, true);
+			}
+
+			WeaponSniper->Destroy();
+			WeaponSniper = nullptr;
 			WeaponType = 3;
 			CurWeaponType = EWeapon::EW_None;
 		}
