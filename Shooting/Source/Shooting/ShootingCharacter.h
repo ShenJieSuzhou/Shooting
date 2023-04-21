@@ -7,6 +7,7 @@
 #include "WeaponKnife.h"
 #include "WeaponAK.h"
 #include "WeaponGlock.h"
+#include "WeaponAWP.h"
 #include "WeaponBase.h"
 #include "PickUpWeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -120,6 +121,9 @@ public:
 	// Weapon Rifle
 	AWeaponAK* WeaponRifle;
 
+	// Weapon Sniper
+	AWeaponAWP* WeaponSniper;
+
 	// Weapon Pisto
 	AWeaponGlock* WeaponPisto;
 
@@ -167,6 +171,9 @@ protected:
 
 	// Weapon3
 	void OnHoldKnife();
+
+	// Weapon4
+	void OnHoldSniper();
 
 	UFUNCTION(BlueprintCallable)
 	void OnAimDownSight();

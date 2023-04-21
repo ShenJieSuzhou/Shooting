@@ -111,6 +111,10 @@ void UAmmoWidget::ShowTip(EWeapon weaponType)
 	{
 		tip = TEXT("Press E to pick up Army Knife");
 	}
+	else if (weaponType == EWeapon::EW_AWP)
+	{
+		tip = TEXT("Press E to pick up Army AWP");
+	}
 
 	WeaponTip->SetText(FText::FromString(tip));
 	WeaponTip->SetVisibility(ESlateVisibility::Visible);

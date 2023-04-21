@@ -24,6 +24,7 @@ AShootingCharacter::~AShootingCharacter()
 	WeaponRifle = nullptr;
 	WeaponPisto = nullptr;
 	WeaponKnife = nullptr;
+	WeaponSniper = nullptr;
 }
 
 PRAGMA_DISABLE_OPTIMIZATION
@@ -112,6 +113,7 @@ void AShootingCharacter::BeginPlay()
 	WeaponRifle = NULL;
 	WeaponPisto = NULL;
 	WeaponKnife = NULL;
+	WeaponSniper = NULL;
 
 	doOnce = false;
 	WeaponChanged = false;
@@ -188,6 +190,26 @@ void AShootingCharacter::SetWeapons(EWeapon WeaponT)
 			}
 		}
 	}
+	else if(WeaponT == EWeapon::EW_AWP)
+	{	
+		UClass* WeaponSniperClass = LoadClass<AWeaponBase>(nullptr, TEXT("Class'/Script/Shooting.WeaponAWP'"));
+
+		UWorld* const World = GetWorld();
+		FVector Localtion = FVector(0.f, 0.f, 0.f);
+		FRotator Rotator = FRotator(0.f);
+
+		if (WeaponSniperClass != nullptr)
+		{
+			if (World != nullptr)
+			{
+				WeaponSniper = Cast<AWeaponAWP>(World->SpawnActor<AWeaponBase>(WeaponSniperClass, Localtion, Rotator));
+				WeaponSniper->FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Palm_R"));
+
+				// 手持AWP
+				this->OnHoldSniper();
+			}
+		}
+	}
 
 	CurWeaponType = WeaponT;
 }
@@ -208,6 +230,7 @@ void AShootingCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("HoldRifle", IE_Pressed, this, &AShootingCharacter::OnHoldRifle);
 	PlayerInputComponent->BindAction("HoldPisto", IE_Pressed, this, &AShootingCharacter::OnHoldPisto);
 	PlayerInputComponent->BindAction("HoldKnife", IE_Pressed, this, &AShootingCharacter::OnHoldKnife);
+	PlayerInputComponent->BindAction("HoldSniper", IE_Pressed, this, &AShootingCharacter::OnHoldSniper);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AShootingCharacter::OnReload);
 
 	// Bind fire event
@@ -298,6 +321,39 @@ void AShootingCharacter::OnHoldPisto()
 	}
 }
 
+void AShootingCharacter::OnHoldSniper()
+{
+	if (!WeaponSniper)
+	{
+		return;
+	}
+
+	if (!IsReloading)
+	{
+		CurrentWeapon = WeaponSniper;
+
+		if (WeaponKnife)
+		{
+			WeaponKnife->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if (WeaponRifle)
+		{
+			WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if (WeaponPisto)
+		{
+			WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		}
+
+		WeaponSniper->FP_Gun->SetHiddenInGame(false);
+		CurWeaponType = EWeapon::EW_AWP;
+		WeaponType = 4;
+		hud->UpdateAmmo(CurrentWeapon->AmmoCount, CurrentWeapon->MagazineAmmo, CurrentWeapon->MaxAmmoCount);
+	}
+}
+
 void AShootingCharacter::OnHoldKnife()
 {
 	if (!WeaponKnife)
@@ -317,6 +373,11 @@ void AShootingCharacter::OnHoldKnife()
 		if(WeaponPisto)
 		{
 			WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if (WeaponSniper)
+		{
+			WeaponSniper->FP_Gun->SetHiddenInGame(true);
 		}
 		
 		WeaponKnife->FP_Gun->SetHiddenInGame(false);
@@ -459,6 +520,42 @@ void AShootingCharacter::OnReload()
 					}
 				}
 
+				IsReloading = false;
+				doOnce = false;
+			}
+		}
+		else
+		{
+			// 提示弹药不足
+		}
+	}
+	else if(CurWeaponType == EWeapon::EW_AWP)
+	{
+		if (!WeaponSniper)
+		{
+			return;
+		}
+
+		if (WeaponSniper->MaxAmmoCount != 0)
+		{
+			if (!doOnce)
+			{
+				IsReloading = true;
+				doOnce = true;
+
+				WeaponSniper->OnReload(Mesh1P);
+				// Load static asset
+				FString ArmsSniperReloadMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_AWP_Reload_anim_Montage.Arms_AWP_Reload_anim_Montage'"));
+				UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *ArmsSniperReloadMontage));
+				if (assetMontage != nullptr)
+				{
+					// Get the animation object for the arms mesh
+					UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+					if (AnimInstance != nullptr)
+					{
+						AnimInstance->Montage_Play(assetMontage, 1.f);
+					}
+				}
 				IsReloading = false;
 				doOnce = false;
 			}
