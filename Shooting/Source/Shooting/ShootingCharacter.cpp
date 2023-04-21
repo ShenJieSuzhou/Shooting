@@ -286,6 +286,16 @@ void AShootingCharacter::OnHoldRifle()
 		{
 			WeaponKnife->FP_Gun->SetHiddenInGame(true);
 		}
+
+		if (WeaponPisto)
+		{
+			WeaponPisto->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if (WeaponSniper)
+		{
+			WeaponSniper->FP_Gun->SetHiddenInGame(true);
+		}
 		
 		CurWeaponType = EWeapon::EW_AK;
 		WeaponType = 0;
@@ -312,6 +322,11 @@ void AShootingCharacter::OnHoldPisto()
 		if(WeaponRifle)
 		{
 			WeaponRifle->FP_Gun->SetHiddenInGame(true);
+		}
+
+		if (WeaponSniper)
+		{
+			WeaponSniper->FP_Gun->SetHiddenInGame(true);
 		}
 		
 		WeaponPisto->FP_Gun->SetHiddenInGame(false);
