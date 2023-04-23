@@ -53,7 +53,7 @@ void AShootingHUD::BeginPlay()
 	FString AmmoWidgetPath = FString(TEXT("WidgetBlueprint'/Game/ShootingPawn/Blueprints/Ammo_HUD.Ammo_HUD_C'"));
 	TSubclassOf<UAmmoWidget> AmmoWidgetClass = LoadClass<UAmmoWidget>(NULL, *AmmoWidgetPath);
 	AmmoWidget = CreateWidget<UAmmoWidget>(GetWorld(), AmmoWidgetClass);
-	AmmoWidget->AddToViewport();
+	AmmoWidget->AddToViewport(100);
 	AmmoWidget->InitItems();
 }
 

@@ -751,6 +751,11 @@ void AShootingCharacter::OnAimDownSight()
 
 	IsAimDown = true;
 	hud->SetCrossWidgetVisible(false);
+
+	if (CurWeaponType == EWeapon::EW_AWP)
+	{
+		CurrentWeapon->SetHidden(true);
+	}
 }
 
 void AShootingCharacter::OnRecoverAimDownSight()
@@ -762,6 +767,11 @@ void AShootingCharacter::OnRecoverAimDownSight()
 
 	IsAimDown = false;
 	hud->SetCrossWidgetVisible(true);
+
+	if (CurWeaponType == EWeapon::EW_AWP)
+	{
+		CurrentWeapon->SetHidden(false);
+	}
 }
 
 /// Reload Sound
