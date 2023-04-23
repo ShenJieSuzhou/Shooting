@@ -37,7 +37,7 @@ AWeaponAWP::AWeaponAWP()
 	// 单个弹夹弹量
 	AmmoCount = 8;
 	// 弹夹装载量
-	MagazineAmmo = 5;
+	MagazineAmmo = 8;
 	// 子弹精度
 	BulletSpread = 0.8;
 	// 装弹时间
@@ -164,7 +164,7 @@ void AWeaponAWP::OnReload(USkeletalMeshComponent* SkMesh)
 {
 	// 重新计算子弹数量
 	// 如果子弹小于一个弹夹就不换弹
-	if (MaxAmmoCount < 20)
+	if (MaxAmmoCount < 8)
 	{
 		AmmoCount = MaxAmmoCount;
 		MaxAmmoCount = 0;
@@ -173,7 +173,7 @@ void AWeaponAWP::OnReload(USkeletalMeshComponent* SkMesh)
 	}
 
 	// 播放动画和声音
-	MaxAmmoCount = MaxAmmoCount - 20 + AmmoCount;
+	MaxAmmoCount = MaxAmmoCount - 8 + AmmoCount;
 
 	//// Load static asset
 	FString AWPReloadAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AWP_Reload_anim.AWP_Reload_anim'"));
