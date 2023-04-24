@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
 #include "Camera/CameraComponent.h"
+#include "ShootingProjectile.h"
 #include "WeaponGlock.generated.h"
 
 

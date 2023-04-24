@@ -129,7 +129,9 @@ void AWeaponAWP::CameraShotLineTrace()
 	queryParam.AddIgnoredActor(this);
 	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
-
+	
+	MuzzleFlash();
+	SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
 	if (isHit)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
@@ -141,9 +143,6 @@ void AWeaponAWP::CameraShotLineTrace()
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
 	}
-
-	SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
-	MuzzleFlash();
 }
 
 void AWeaponAWP::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
@@ -226,7 +225,7 @@ void AWeaponAWP::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormL
 void AWeaponAWP::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
 {
 	//Blueprint
-	UClass* TraceRoundClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/TraceRound_BP.TraceRound_BP_C'"));
+	UClass* TraceRoundClass = LoadClass<AShootingProjectile>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/ShootingBullet_BP.ShootingBullet_BP_C'"));
 	UWorld* const World = GetWorld();
 
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -234,7 +233,7 @@ void AWeaponAWP::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocat
 	FRotator CameraRotator = FirstCamera->GetComponentRotation();
 	auto Matix = UKismetMathLibrary::MakeTransform(Location, CameraRotator, FVector(1, 1, 1));
 
-	AActor* Tracer = World->SpawnActor<AActor>(TraceRoundClass, Matix);
+	AShootingProjectile* Tracer = World->SpawnActor<AShootingProjectile>(TraceRoundClass, Matix);
 	if (!Tracer)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
