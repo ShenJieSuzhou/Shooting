@@ -42,10 +42,26 @@ AWeaponAWP::AWeaponAWP()
 	BulletSpread = 0.8;
 	// 装弹时间
 	ReloadTime = 1.5;
+	// 是否上膛
+	IsReady = true;
 }
 
 void AWeaponAWP::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 {
+	if (!IsReady)
+	{
+		return;
+	}
+
+	IsReady = false;
+	// Delay 1.33
+	FLatentActionInfo LatentInfo;
+	LatentInfo.Linkage = 0;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.ExecutionFunction = "BulletReloaded";
+	LatentInfo.UUID = __LINE__;//行号为ID
+	UKismetSystemLibrary::Delay(this, 1.33f, LatentInfo);
+
 	// 播放声音
 	FString GunShotSound = FString(TEXT("SoundWave'/Game/ShootingPawn/Sounds/Gunshot.Gunshot'"));
 	FireSound = Cast<USoundBase>(LoadObject<USoundBase>(nullptr, *GunShotSound));
@@ -67,7 +83,7 @@ void AWeaponAWP::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 			UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
 			if (AnimInstance != nullptr)
 			{
-				AnimInstance->Montage_Play(FireAnimation, 0.8f);
+				AnimInstance->Montage_Play(FireAnimation, 1.0f);
 			}
 		}
 	}
@@ -90,12 +106,12 @@ void AWeaponAWP::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 	}
 	
 	// Load static asset
-	FString AWPFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AWP_Fire_anim.AWP_Fire_anim'"));
-	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AWPFireAnimation));
-	if (assetAnim != nullptr)
-	{
-		FP_Gun->PlayAnimation(assetAnim, false);
-	}
+	//FString AWPFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AWP_Fire_anim.AWP_Fire_anim'"));
+	//UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AWPFireAnimation));
+	//if (assetAnim != nullptr)
+	//{
+	//	FP_Gun->PlayAnimation(assetAnim, false);
+	//}
 
 	//发射子弹
 	AmmoCount--;
@@ -269,4 +285,9 @@ void AWeaponAWP::DelayAndDisplayMuzzle()
 	FP_FlashPlane->SetRelativeRotation(FRotator(90, RotatorValue, 90));
 	float ScaleValue = FMath::RandRange(0.1f, 0.3f);
 	FP_FlashPlane->SetWorldScale3D(FVector(ScaleValue, ScaleValue, ScaleValue));
+}
+
+void AWeaponAWP::BulletReloaded()
+{
+	IsReady = true;
 }

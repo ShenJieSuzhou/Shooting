@@ -6,6 +6,7 @@
 #include "WeaponGlock.h"
 #include "WeaponAK.h"
 #include "WeaponKnife.h"
+#include "WeaponAWP.h"
 
 /**
  * 

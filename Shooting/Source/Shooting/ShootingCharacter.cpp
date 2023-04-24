@@ -605,7 +605,7 @@ void AShootingCharacter::OnPickUp()
 
 	CollisionActor->Destroy();
 	this->SetWeapons(CurrOverlapWeapon);
-	hud->AmmoWidget->UpdateWeaponsInventory(WeaponRifle, WeaponPisto, WeaponKnife);
+	hud->AmmoWidget->UpdateWeaponsInventory(WeaponRifle, WeaponPisto, WeaponKnife, WeaponSniper);
 	CurrOverlapWeapon = EWeapon::EW_None;
 }
 
@@ -705,6 +705,9 @@ void AShootingCharacter::OnDropDown()
 			CurWeaponType = EWeapon::EW_None;
 		}
 	}
+
+	// Update HUD
+	hud->AmmoWidget->UpdateWeaponsInventory(WeaponRifle, WeaponPisto, WeaponKnife, WeaponSniper);
 }
 
 

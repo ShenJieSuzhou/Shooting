@@ -41,4 +41,9 @@ public:
 public:
 	UFUNCTION()
 	void DelayAndDisplayMuzzle();
+	
+	UFUNCTION()
+	void BulletReloaded();
+
+	bool IsReady;
 };

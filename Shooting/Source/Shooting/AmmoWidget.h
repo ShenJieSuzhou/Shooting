@@ -46,12 +46,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UGunItem* KnifeLight;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UGunItem* SniperLight;
+
 public:
 	void InitItems();
 
 	void UpdateAmmo(int current, int Magazine, int maxAmmount);
 
-	void UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, AWeaponKnife* Knife);
+	void UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, AWeaponKnife* Knife, AWeaponAWP* Sniper);
 
 	void ShowTip(EWeapon weaponType);
 

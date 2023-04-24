@@ -60,6 +60,20 @@ void UAmmoWidget::InitItems()
 
 		KnifeLight->SetIsOwned(false);
 	}
+
+	if (SniperLight)
+	{
+		FString selPath = FString(TEXT("Texture2D'/Game/ShootingPawn/Textures/rifle.rifle'"));
+		FString UnSelPath = FString(TEXT("Texture2D'/Game/ShootingPawn/Textures/rifle_gray.rifle_gray'"));
+		UTexture2D* selTexture = LoadObject<UTexture2D>(nullptr, *selPath);
+		UTexture2D* unSelTexture = LoadObject<UTexture2D>(nullptr, *UnSelPath);
+		if (selTexture != nullptr && unSelTexture != nullptr)
+		{
+			SniperLight->SetImage(selTexture, unSelTexture);
+		}
+
+		SniperLight->SetIsOwned(false);
+	}
 }
 
 void UAmmoWidget::UpdateAmmo(int current, int Magazine, int maxAmmount)
@@ -74,11 +88,12 @@ void UAmmoWidget::UpdateAmmo(int current, int Magazine, int maxAmmount)
 	TotalAmmo->SetText(FText::FromString(sMaxAmmount));
 }
 
-void UAmmoWidget::UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, AWeaponKnife* Knife)
+void UAmmoWidget::UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, AWeaponKnife* Knife, AWeaponAWP* Sniper)
 {
 	RifleLight->SetIsOwned(false);
 	PistoLight->SetIsOwned(false);
 	KnifeLight->SetIsOwned(false);
+	SniperLight->SetIsOwned(false);
 
 	if(Knife)
 	{
@@ -93,6 +108,11 @@ void UAmmoWidget::UpdateWeaponsInventory(AWeaponAK* Rifle, AWeaponGlock* Pisto, 
 	if(Pisto)
 	{
 		PistoLight->SetIsOwned(true);
+	}
+
+	if (Sniper)
+	{
+		SniperLight->SetIsOwned(true);
 	}
 }
 
