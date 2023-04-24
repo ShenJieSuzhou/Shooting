@@ -87,31 +87,14 @@ void AWeaponAWP::OnFire(USkeletalMeshComponent* SkMesh, bool isAimDown)
 			}
 		}
 	}
-	else
-	{
-		// Load static asset
-		//FString GlockFireMontage = FString(TEXT("AnimMontage'/Game/ShootingPawn/Animations/Arms_Glock_ADS_Fire_anim_Montage.Arms_Glock_ADS_Fire_anim_Montage'"));
-		//UAnimMontage* assetMontage = Cast<UAnimMontage>(LoadObject<UAnimMontage>(nullptr, *GlockFireMontage));
-		//FireAnimation = assetMontage;
-
-		//if (FireAnimation != nullptr)
-		//{
-		//	// Get the animation object for the arms mesh
-		//	UAnimInstance* AnimInstance = SkMesh->GetAnimInstance();
-		//	if (AnimInstance != nullptr)
-		//	{
-		//		AnimInstance->Montage_Play(FireAnimation, 0.8f);
-		//	}
-		//}
-	}
 	
 	// Load static asset
-	//FString AWPFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AWP_Fire_anim.AWP_Fire_anim'"));
-	//UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AWPFireAnimation));
-	//if (assetAnim != nullptr)
-	//{
-	//	FP_Gun->PlayAnimation(assetAnim, false);
-	//}
+	FString AWPFireAnimation = FString(TEXT("AnimSequence'/Game/ShootingPawn/Animations/AWP_Fire_anim.AWP_Fire_anim'"));
+	UAnimationAsset* assetAnim = Cast<UAnimationAsset>(LoadObject<UAnimationAsset>(nullptr, *AWPFireAnimation));
+	if (assetAnim != nullptr)
+	{
+		FP_Gun->PlayAnimation(assetAnim, false);
+	}
 
 	//·¢Éä×Óµ¯
 	AmmoCount--;
@@ -153,18 +136,14 @@ void AWeaponAWP::CameraShotLineTrace()
 		FVector start = FP_MuzzleLocation->GetComponentLocation();
 		//GunShotLineTrace(start, Hit.ImpactPoint);
 		SpawnBulletDecalTrace(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
-
-		int32 value = FMath::RandRange(1, 10);
-		if (value >= 0)
-		{
-			SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
-			MuzzleFlash();
-		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
 	}
+
+	SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+	MuzzleFlash();
 }
 
 void AWeaponAWP::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)

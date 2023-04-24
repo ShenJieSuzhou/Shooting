@@ -140,20 +140,14 @@ void AWeaponAK::CameraShotLineTrace()
 		FVector start = FP_MuzzleLocation->GetComponentLocation();
 		//GunShotLineTrace(start, Hit.ImpactPoint);
 		SpawnBulletDecalTrace(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
-
-		int32 value = FMath::RandRange(1, 10);
-		if(value >= 0)
-		{
-			SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
-			MuzzleFlash();
-		}	
 	}
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
 	}
 
-
+	SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+	MuzzleFlash();
 }
 
 void AWeaponAK::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
