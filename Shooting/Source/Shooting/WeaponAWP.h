@@ -33,7 +33,7 @@ public:
 
 	void GunShotLineTrace(FVector TraceStart, FVector TraceEnd);
 
-	void SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
+	void SpawnBulletDecalTrace(FVector Location);
 
 	void SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint);
 

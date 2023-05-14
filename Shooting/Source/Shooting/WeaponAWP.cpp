@@ -39,7 +39,7 @@ AWeaponAWP::AWeaponAWP()
 	// 弹夹装载量
 	MagazineAmmo = 8;
 	// 子弹精度
-	BulletSpread = 0.8;
+	BulletSpread = 50.f;
 	// 装弹时间
 	ReloadTime = 1.5;
 	// 是否上膛
@@ -116,13 +116,12 @@ void AWeaponAWP::CameraShotLineTrace()
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
 	FVector TraceStart = FirstCamera->GetComponentLocation();
-	FVector TraceEnd = FirstCamera->GetForwardVector() * 200000;
 
 	float calu = BulletSpread * -1;
 	float x = FMath::RandRange(calu, BulletSpread);
 	float y = FMath::RandRange(calu, BulletSpread);
 	float z = FMath::RandRange(calu, BulletSpread);
-	TraceEnd = TraceEnd + TraceStart + FVector(x, y, z);
+	FVector TraceEnd = FirstCamera->GetForwardVector() * 15000.f + TraceStart + FVector(x, y, z);
 
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
@@ -131,13 +130,13 @@ void AWeaponAWP::CameraShotLineTrace()
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
 	
 	MuzzleFlash();
-	SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+	//SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
 	if (isHit)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
-		FVector start = FP_MuzzleLocation->GetComponentLocation();
+		//FVector start = FP_MuzzleLocation->GetComponentLocation();
 		//GunShotLineTrace(start, Hit.ImpactPoint);
-		SpawnBulletDecalTrace(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+		SpawnBulletDecalTrace(Hit.ImpactPoint);
 	}
 	else
 	{
@@ -201,7 +200,7 @@ bool AWeaponAWP::OnCheckAmmo()
 }
 
 
-void AWeaponAWP::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
+void AWeaponAWP::SpawnBulletDecalTrace(FVector Location)
 {
 	//Blueprint
 	UClass* BulletDecalClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
@@ -214,8 +213,8 @@ void AWeaponAWP::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormL
 		if (World != nullptr)
 		{
 			//ImpactPoint
-			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(ImpactPoint);
-			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
+			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Location);
+			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, Location, Rotator1);
 			BulletDecal->SetActorScale3D(FVector(0.025f));
 		}
 	}

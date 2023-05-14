@@ -38,7 +38,7 @@ AWeaponAK::AWeaponAK()
 	// 弹夹装载量
 	MagazineAmmo = 30;
 	// 子弹精度
-	BulletSpread = 0.7;
+	BulletSpread = 120.f;
 	// 装弹时间
 	ReloadTime = 2.0;
 }
@@ -117,16 +117,17 @@ void AWeaponAK::OnStopFire()
 
 void AWeaponAK::CameraShotLineTrace()
 {
+
 	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
 	FVector TraceStart = FirstCamera->GetComponentLocation();
-	FVector TraceEnd = FirstCamera->GetForwardVector() * 200000;
 
 	float calu = BulletSpread * -1;
 	float x = FMath::RandRange(calu, BulletSpread);
 	float y = FMath::RandRange(calu, BulletSpread);
 	float z = FMath::RandRange(calu, BulletSpread);
-	TraceEnd = TraceEnd + TraceStart + FVector(x, y, z);
+
+	FVector TraceEnd = TraceStart + FirstCamera->GetForwardVector() * 20000.f + FVector(x, y, z);
 
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
@@ -134,15 +135,14 @@ void AWeaponAK::CameraShotLineTrace()
 	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
 
 	MuzzleFlash();
-	SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+	//SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
 
 	if (isHit)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
 		// 判断击中的是什么物体，然后生成不同的效果
 
-		FVector start = FP_MuzzleLocation->GetComponentLocation();
-		SpawnBulletDecalTrace(start, Hit.ImpactPoint, Hit.ImpactPoint);
+		SpawnBulletDecalTrace(Hit.Location);
 	}
 	else
 	{
@@ -156,7 +156,7 @@ void AWeaponAK::GunShotLineTrace(FVector TraceStart, FVector TraceEnd)
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
 	queryParam.AddIgnoredComponent(FP_Gun);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 5.0f);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Green, false, 30.0f);
 }
 
 void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
@@ -170,7 +170,6 @@ void AWeaponAK::OnReload(USkeletalMeshComponent* SkMesh)
 		AmmoCount = MaxAmmoCount;
 		MaxAmmoCount = 0;
 		MagazineAmmo = 0;
-
 
 		return;
 	}
@@ -209,7 +208,7 @@ bool AWeaponAK::OnCheckAmmo()
 	return true;
 }
 
-void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
+void AWeaponAK::SpawnBulletDecalTrace(FVector Location)
 {
 	//Blueprint
 	UClass* BulletDecalClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
@@ -222,9 +221,9 @@ void AWeaponAK::SpawnBulletDecalTrace(FVector Location, FVector SpawnTransFormLo
 		if (World != nullptr)
 		{
 			//ImpactPoint
-			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(ImpactPoint);
-			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, SpawnTransFormLocation, Rotator1);
-			BulletDecal->SetActorScale3D(FVector(0.025f));
+			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Location);
+			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, Location, Rotator1);
+			BulletDecal->SetActorScale3D(FVector(0.02f));
 		}
 	}
 }
