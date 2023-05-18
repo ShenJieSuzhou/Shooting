@@ -121,11 +121,12 @@ void AWeaponAWP::CameraShotLineTrace()
 	float x = FMath::RandRange(calu, BulletSpread);
 	float y = FMath::RandRange(calu, BulletSpread);
 	float z = FMath::RandRange(calu, BulletSpread);
-	FVector TraceEnd = FirstCamera->GetForwardVector() * 15000.f + TraceStart + FVector(x, y, z);
+	FVector TraceEnd = FirstCamera->GetForwardVector() * 30000.f + TraceStart + FVector(x, y, z);
 
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
+	queryParam.bReturnPhysicalMaterial = true;
 	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
 	

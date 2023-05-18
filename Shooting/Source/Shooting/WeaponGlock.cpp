@@ -122,11 +122,12 @@ void AWeaponGlock::CameraShotLineTrace()
 	float x = FMath::RandRange(calu, BulletSpread);
 	float y = FMath::RandRange(calu, BulletSpread);
 	float z = FMath::RandRange(calu, BulletSpread);
-	FVector TraceEnd = FirstCamera->GetForwardVector() * 9000 + TraceStart + FVector(x, y, z);
+	FVector TraceEnd = TraceStart + FirstCamera->GetForwardVector() * 9000.f + FVector(x, y, z);
 
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
 	queryParam.AddIgnoredActor(this);
+	queryParam.bReturnPhysicalMaterial = true;
 	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
 	
 	MuzzleFlash();

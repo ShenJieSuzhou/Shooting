@@ -64,22 +64,6 @@ void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
 
 	UWorld* const World = GetWorld();
 
-
-	//if (BulletDecalClass != nullptr )
-	//{
-	//	if (World != nullptr)
-	//	{
-	//		FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal);
-
-	//		if (!ImpactParticlePath.IsEmpty())
-	//		{
-	//			ABulletImpactEffect* BulletImpact = World->SpawnActor<ABulletImpactEffect>(BulletImpactClass, Hit.Location, Rotator1);
-	//			BulletImpact->SetNiagaraSysAsset(ImpactParticlePath);
-	//		}
-	//	}
-	//}
-
-
 	if (BulletDecalClass != nullptr && BulletImpactClass != nullptr)
 	{
 		if (World != nullptr)
