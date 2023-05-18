@@ -130,17 +130,10 @@ void AWeaponAWP::CameraShotLineTrace()
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, isHit ? FColor::Red : FColor::Green, false, 5.0f);
 	
 	MuzzleFlash();
-	//SpawnTraceRounder(FP_MuzzleLocation->GetComponentLocation(), Hit.ImpactPoint, Hit.ImpactPoint);
+
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
-		//FVector start = FP_MuzzleLocation->GetComponentLocation();
-		//GunShotLineTrace(start, Hit.ImpactPoint);
-		SpawnBulletDecalTrace(Hit.ImpactPoint);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
+		SpawnBulletDecalTrace(Hit);
 	}
 }
 
@@ -200,44 +193,23 @@ bool AWeaponAWP::OnCheckAmmo()
 }
 
 
-void AWeaponAWP::SpawnBulletDecalTrace(FVector Location)
-{
-	//Blueprint
-	UClass* BulletDecalClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
-
-	UWorld* const World = GetWorld();
-	FRotator Rotator = FRotator(0.f);
-
-	if (BulletDecalClass != nullptr)
-	{
-		if (World != nullptr)
-		{
-			//ImpactPoint
-			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Location);
-			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, Location, Rotator1);
-			BulletDecal->SetActorScale3D(FVector(0.025f));
-		}
-	}
-}
-
-
-void AWeaponAWP::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
-{
-	//Blueprint
-	UClass* TraceRoundClass = LoadClass<AShootingProjectile>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/ShootingBullet_BP.ShootingBullet_BP_C'"));
-	UWorld* const World = GetWorld();
-
-	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
-	FRotator CameraRotator = FirstCamera->GetComponentRotation();
-	auto Matix = UKismetMathLibrary::MakeTransform(Location, CameraRotator, FVector(1, 1, 1));
-
-	AShootingProjectile* Tracer = World->SpawnActor<AShootingProjectile>(TraceRoundClass, Matix);
-	if (!Tracer)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
-	}
-}
+//void AWeaponAWP::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
+//{
+//	//Blueprint
+//	UClass* TraceRoundClass = LoadClass<AShootingProjectile>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/ShootingBullet_BP.ShootingBullet_BP_C'"));
+//	UWorld* const World = GetWorld();
+//
+//	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+//	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
+//	FRotator CameraRotator = FirstCamera->GetComponentRotation();
+//	auto Matix = UKismetMathLibrary::MakeTransform(Location, CameraRotator, FVector(1, 1, 1));
+//
+//	AShootingProjectile* Tracer = World->SpawnActor<AShootingProjectile>(TraceRoundClass, Matix);
+//	if (!Tracer)
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
+//	}
+//}
 
 void AWeaponAWP::MuzzleFlash()
 {

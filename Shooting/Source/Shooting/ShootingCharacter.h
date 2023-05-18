@@ -190,6 +190,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ReloadMagazine();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "shoot")
+	void testSpawnDecal();
+
 	///** Resets HMD orientation and position in VR. */
 	//void OnResetVR();
 

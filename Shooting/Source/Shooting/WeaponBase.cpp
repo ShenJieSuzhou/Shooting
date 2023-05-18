@@ -2,7 +2,10 @@
 
 
 #include "WeaponBase.h"
-
+#include "Kismet/KismetMathLibrary.h"
+#include "CusActor/BulletHole.h"
+#include "CusActor/BulletImpactEffect.h"
+#include "Util/ShootingUtil.h"
 // Sets default values
 AWeaponBase::AWeaponBase()
 {
@@ -45,4 +48,54 @@ void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+
+void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
+{
+	// 判断击中的是什么物体，然后生成不同的效果
+	EPhysicalSurface SurfaceType = FShootingUtil::GetInstance()->GetPhysicalSurfaceType(Hit.PhysMaterial.Get());  
+	FString BulletHolePath = FShootingUtil::GetInstance()->RandomGenerateBulletHole(SurfaceType);
+	FString ImpactParticlePath = FShootingUtil::GetInstance()->GetImpactParticleSyatem(SurfaceType);
+
+	//Blueprint
+	UClass* BulletDecalClass = LoadClass<ABulletHole>(nullptr, TEXT("Class'/Script/Shooting.BulletHole'"));
+	UClass* BulletImpactClass = LoadClass<ABulletImpactEffect>(nullptr, TEXT("Class'/Script/Shooting.BulletImpactEffect'"));
+
+	UWorld* const World = GetWorld();
+
+
+	//if (BulletDecalClass != nullptr )
+	//{
+	//	if (World != nullptr)
+	//	{
+	//		FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal);
+
+	//		if (!ImpactParticlePath.IsEmpty())
+	//		{
+	//			ABulletImpactEffect* BulletImpact = World->SpawnActor<ABulletImpactEffect>(BulletImpactClass, Hit.Location, Rotator1);
+	//			BulletImpact->SetNiagaraSysAsset(ImpactParticlePath);
+	//		}
+	//	}
+	//}
+
+
+	if (BulletDecalClass != nullptr && BulletImpactClass != nullptr)
+	{
+		if (World != nullptr)
+		{
+			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal);
+			if(!BulletHolePath.IsEmpty())
+			{
+				ABulletHole* BulletDecal = World->SpawnActor<ABulletHole>(BulletDecalClass, Hit.Location, Rotator1);
+				BulletDecal->SetBulletHoleMaterial(BulletHolePath);
+			}
+			
+			if(!ImpactParticlePath.IsEmpty())
+			{
+				ABulletImpactEffect* BulletImpact = World->SpawnActor<ABulletImpactEffect>(BulletImpactClass, Hit.Location, Rotator1);
+				BulletImpact->SetNiagaraSysAsset(ImpactParticlePath);
+			}
+		}
+	}
 }

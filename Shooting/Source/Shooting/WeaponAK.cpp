@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 AWeaponAK::AWeaponAK()
 {
@@ -131,6 +132,7 @@ void AWeaponAK::CameraShotLineTrace()
 
 	FHitResult Hit;
 	FCollisionQueryParams queryParam;
+	queryParam.bReturnPhysicalMaterial = true;
 	queryParam.AddIgnoredActor(this);
 	bool isHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, queryParam);
 
@@ -139,14 +141,8 @@ void AWeaponAK::CameraShotLineTrace()
 
 	if (isHit)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
-		// 判断击中的是什么物体，然后生成不同的效果
-
-		SpawnBulletDecalTrace(Hit.Location);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("No Actors were hit"));
+		// UE_LOG(LogTemp, Log, TEXT("Trace hit actor"));
+		SpawnBulletDecalTrace(Hit);
 	}
 }
 
@@ -208,44 +204,23 @@ bool AWeaponAK::OnCheckAmmo()
 	return true;
 }
 
-void AWeaponAK::SpawnBulletDecalTrace(FVector Location)
-{
-	//Blueprint
-	UClass* BulletDecalClass = LoadClass<AActor>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/BulletDecal_BP.BulletDecal_BP_C'"));
-
-	UWorld* const World = GetWorld();
-	FRotator Rotator = FRotator(0.f);
-
-	if (BulletDecalClass != nullptr)
-	{
-		if (World != nullptr)
-		{
-			//ImpactPoint
-			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Location);
-			AActor* BulletDecal = World->SpawnActor<AActor>(BulletDecalClass, Location, Rotator1);
-			BulletDecal->SetActorScale3D(FVector(0.02f));
-		}
-	}
-}
-
-
-void AWeaponAK::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
-{
-	//Blueprint
-	UClass* TraceRoundClass = LoadClass<AShootingProjectile>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/ShootingBullet_BP.ShootingBullet_BP_C'"));
-	UWorld* const World = GetWorld();
-
-	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
-	FRotator CameraRotator = FirstCamera->GetComponentRotation();
-	auto Matix = UKismetMathLibrary::MakeTransform(Location, CameraRotator, FVector(1, 1, 1));
-
-	AShootingProjectile* Tracer = World->SpawnActor<AShootingProjectile>(TraceRoundClass, Matix);
-	if(!Tracer)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
-	}
-}
+//void AWeaponAK::SpawnTraceRounder(FVector Location, FVector SpawnTransFormLocation, FVector ImpactPoint)
+//{
+//	//Blueprint
+//	UClass* TraceRoundClass = LoadClass<AShootingProjectile>(nullptr, TEXT("Blueprint'/Game/ShootingPawn/Blueprints/ShootingBullet_BP.ShootingBullet_BP_C'"));
+//	UWorld* const World = GetWorld();
+//
+//	AShootingCharacter* MyPawn = Cast<AShootingCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+//	UCameraComponent* FirstCamera = MyPawn->FirstPersonCameraComponent;
+//	FRotator CameraRotator = FirstCamera->GetComponentRotation();
+//	auto Matix = UKismetMathLibrary::MakeTransform(Location, CameraRotator, FVector(1, 1, 1));
+//
+//	AShootingProjectile* Tracer = World->SpawnActor<AShootingProjectile>(TraceRoundClass, Matix);
+//	if(!Tracer)
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, TEXT("Tracer NULL"));
+//	}
+//}
 
 void AWeaponAK::MuzzleFlash()
 {
