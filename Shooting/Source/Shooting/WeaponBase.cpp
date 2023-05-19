@@ -3,9 +3,11 @@
 
 #include "WeaponBase.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Math/UnrealMathUtility.h"
 #include "CusActor/BulletHole.h"
 #include "CusActor/BulletImpactEffect.h"
 #include "Util/ShootingUtil.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AWeaponBase::AWeaponBase()
 {
@@ -68,6 +70,9 @@ void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
 	{
 		if (World != nullptr)
 		{
+
+			ApplyDamageTo(Hit);
+
 			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal);
 			if(!BulletHolePath.IsEmpty())
 			{
@@ -82,4 +87,14 @@ void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
 			}
 		}
 	}
+}
+
+void AWeaponBase::ApplyDamageTo(FHitResult Hit)
+{
+	float damage = FMath::RandRange(1.f, 5.f);
+	AActor* DamagedActor = Hit.GetActor();
+	FHitResult HitOut = Hit;
+	FVector Direction = Hit.ImpactNormal;
+	TSubclassOf<UDamageType> DamageType;
+	UGameplayStatics::ApplyPointDamage(DamagedActor, damage, Direction, HitOut, nullptr, this, DamageType);
 }

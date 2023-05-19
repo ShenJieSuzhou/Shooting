@@ -116,6 +116,7 @@ public:
 	bool IsReloading;
 
 	// Weapon Current
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AWeaponBase* CurrentWeapon;
 
 	// Weapon Rifle

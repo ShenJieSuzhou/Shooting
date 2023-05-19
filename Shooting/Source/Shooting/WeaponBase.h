@@ -102,4 +102,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SpawnBulletDecalTrace(FHitResult Hit);
+
+	void ApplyDamageTo(FHitResult Hit);
 };
