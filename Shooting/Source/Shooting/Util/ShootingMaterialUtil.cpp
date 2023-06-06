@@ -60,10 +60,12 @@ void FShootingMaterialUtil::PreloadMaterials()
 	FString defaultVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType_Default);
 	FString MetalVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType1);
 	FString WoodVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType2);
+	FString WaterVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType3);
 	FString SandVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType4);
 	FString BrickVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType5);
 	FString GlassVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType6);
 	FString GroundVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType7);
+	FString BloodVF = FShootingConfigs::GetInstance()->GetParticleSystemWithType(SurfaceType8);
 
 	if (!RequestSyncLoadOne(FSoftObjectPath(defaultVF), VF_Common))
 	{
@@ -102,6 +104,18 @@ void FShootingMaterialUtil::PreloadMaterials()
 	}
 
 	if (!RequestSyncLoadOne(FSoftObjectPath(GroundVF), VF_Ground))
+	{
+		ResLoadDelegate.ExecuteIfBound(false);
+		return;
+	}
+
+	if (!RequestSyncLoadOne(FSoftObjectPath(WaterVF), VF_Water))
+	{
+		ResLoadDelegate.ExecuteIfBound(false);
+		return;
+	}
+
+	if (!RequestSyncLoadOne(FSoftObjectPath(BloodVF), VF_Blood))
 	{
 		ResLoadDelegate.ExecuteIfBound(false);
 		return;

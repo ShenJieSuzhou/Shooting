@@ -88,7 +88,7 @@ void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
 
 void AWeaponBase::ApplyDamageTo(FHitResult Hit)
 {
-	float damage = FMath::RandRange(1.f, 5.f);
+	float damage = FMath::RandRange(10.f, 25.f);
 	AActor* DamagedActor = Hit.GetActor();
 	FHitResult HitOut = Hit;
 	FVector Direction = Hit.ImpactNormal;
