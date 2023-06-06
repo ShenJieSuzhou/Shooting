@@ -16,3 +16,13 @@ AShootingGameMode::AShootingGameMode()
 	// use our custom HUD class
 	HUDClass = AShootingHUD::StaticClass();
 }
+
+void AShootingGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+}
+
+void AShootingGameMode::StartPlay()
+{
+	Super::StartPlay();
+}

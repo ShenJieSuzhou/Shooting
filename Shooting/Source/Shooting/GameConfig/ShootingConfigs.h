@@ -15,9 +15,12 @@ public:
 	}
 
 	// 根据材质获取对应弹孔贴图
-	TArray<FString> GetBulletDecalWithType(EPhysicalSurface type);
+	TArray<FSoftObjectPath> GetBulletDecalWithType(EPhysicalSurface type);
 
 	// 根据材质获取对应粒子
 	FString GetParticleSystemWithType(EPhysicalSurface type);
+
+	// 根据材质获取对应的蓝图路径
+	FString GetBPClassPathWithType(EPhysicalSurface type);
 };
 

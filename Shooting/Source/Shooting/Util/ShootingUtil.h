@@ -6,6 +6,7 @@
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Chaos/ChaosEngineInterface.h"
 #include "../GameConfig/ShootingConfigs.h"
+#include "ShootingMaterialUtil.h"
 #include "Math/UnrealMathUtility.h"
 
 class FShootingUtil
@@ -21,8 +22,8 @@ public:
 	EPhysicalSurface GetPhysicalSurfaceType(UPhysicalMaterial* material);
 
 	// 根据材质随机生成弹孔
-	FString RandomGenerateBulletHole(EPhysicalSurface type);
+	UMaterialInterface* RandomGenerateBulletHole(EPhysicalSurface type);
 
 	// 获取击中粒子效果
-	FString GetImpactParticleSyatem(EPhysicalSurface type);
+	UNiagaraSystem* GetImpactParticleSyatem(EPhysicalSurface type);
 };

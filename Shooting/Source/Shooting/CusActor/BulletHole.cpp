@@ -26,27 +26,15 @@ void ABulletHole::Tick(float DeltaTime)
 
 }
 
-void ABulletHole::SetBulletHoleMaterial(FString path)
+void ABulletHole::SetBulletHoleMaterial(UMaterialInterface* material)
 {
 	if(Decal)
 	{
-		// º”‘ÿ≤ƒ÷ 
-		UMaterialInstanceConstant* MaterialInterface = LoadObject<UMaterialInstanceConstant>(NULL, *path);
-		//UMaterialInstanceConstant* MaterialInterface = Cast<UMaterialInstanceConstant>(StaticLoadObject(UMaterialInstanceConstant::StaticClass(), nullptr, *path));
-		if (MaterialInterface)
+		if (material)
 		{
-			UMaterialInterface* DecalMaterial = MaterialInterface;
-			if (DecalMaterial)
-			{
-				Decal->SetDecalMaterial(DecalMaterial);
-				Decal->DecalSize = FVector(10.f, 10.f, 10.f);
-			}
+			Decal->SetDecalMaterial(material);
+			Decal->DecalSize = FVector(10.f, 10.f, 10.f);
 		}
-		
-
-		//UMaterialInstanceDynamic* MaterialInstance = Cast<UMaterialInstanceDynamic>(StaticLoadObject(UMaterialInstanceDynamic::StaticClass(), nullptr, *path));
-		//UMaterial* MatObj = LoadObject<UMaterial>(NULL, *path);
-		//UMaterialInstanceDynamic* MatInstance = UMaterialInstanceDynamic::Create(MatObj, this);
 	}
 }
 

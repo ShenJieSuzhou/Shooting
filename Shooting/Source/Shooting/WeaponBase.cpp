@@ -7,6 +7,7 @@
 #include "CusActor/BulletHole.h"
 #include "CusActor/BulletImpactEffect.h"
 #include "Util/ShootingUtil.h"
+#include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -36,33 +37,30 @@ AWeaponBase::AWeaponBase()
 	FP_FlashPlane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunFlash"));
 	FP_FlashPlane->SetVisibility(false);
 	FP_FlashPlane->SetupAttachment(FP_Gun);
+
+	//Blueprint
+	BulletDecalClass = LoadClass<ABulletHole>(nullptr, TEXT("Class'/Script/Shooting.BulletHole'"));
+	BulletImpactClass = LoadClass<ABulletImpactEffect>(nullptr, TEXT("Class'/Script/Shooting.BulletImpactEffect'"));
 }
 
 // Called when the game starts or when spawned
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-
 
 void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
 {
 	// 判断击中的是什么物体，然后生成不同的效果
 	EPhysicalSurface SurfaceType = FShootingUtil::GetInstance()->GetPhysicalSurfaceType(Hit.PhysMaterial.Get());  
-	FString BulletHolePath = FShootingUtil::GetInstance()->RandomGenerateBulletHole(SurfaceType);
-	FString ImpactParticlePath = FShootingUtil::GetInstance()->GetImpactParticleSyatem(SurfaceType);
-
-	//Blueprint
-	UClass* BulletDecalClass = LoadClass<ABulletHole>(nullptr, TEXT("Class'/Script/Shooting.BulletHole'"));
-	UClass* BulletImpactClass = LoadClass<ABulletImpactEffect>(nullptr, TEXT("Class'/Script/Shooting.BulletImpactEffect'"));
+	UMaterialInterface* BulletHole = FShootingUtil::GetInstance()->RandomGenerateBulletHole(SurfaceType);
+	UNiagaraSystem* ImpactParticle = FShootingUtil::GetInstance()->GetImpactParticleSyatem(SurfaceType);
 
 	UWorld* const World = GetWorld();
 
@@ -70,20 +68,19 @@ void AWeaponBase::SpawnBulletDecalTrace(FHitResult Hit)
 	{
 		if (World != nullptr)
 		{
-
 			ApplyDamageTo(Hit);
 
 			FRotator Rotator1 = UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal);
-			if(!BulletHolePath.IsEmpty())
+			if(BulletHole)
 			{
 				ABulletHole* BulletDecal = World->SpawnActor<ABulletHole>(BulletDecalClass, Hit.Location, Rotator1);
-				BulletDecal->SetBulletHoleMaterial(BulletHolePath);
+				BulletDecal->SetBulletHoleMaterial(BulletHole);
 			}
 			
-			if(!ImpactParticlePath.IsEmpty())
+			if (ImpactParticle)
 			{
 				ABulletImpactEffect* BulletImpact = World->SpawnActor<ABulletImpactEffect>(BulletImpactClass, Hit.Location, Rotator1);
-				BulletImpact->SetNiagaraSysAsset(ImpactParticlePath);
+				BulletImpact->SetNiagaraSysAsset(ImpactParticle);
 			}
 		}
 	}

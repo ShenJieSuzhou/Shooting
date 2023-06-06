@@ -28,15 +28,11 @@ void ABulletImpactEffect::Tick(float DeltaTime)
 
 }
 
-void ABulletImpactEffect::SetNiagaraSysAsset(FString path)
+void ABulletImpactEffect::SetNiagaraSysAsset(UNiagaraSystem* NiagaraAsset)
 {
-	if(Niagara)
+	if(NiagaraAsset)
 	{
-		UNiagaraSystem* NiagaraAsset = LoadObject<UNiagaraSystem>(nullptr, *path);
-		if(NiagaraAsset)
-		{
-			Niagara->SetAsset(NiagaraAsset);
-		}
+		Niagara->SetAsset(NiagaraAsset);
 	}
 }
 

@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	ABulletHole();
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Decal")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Decal")
 	UDecalComponent* Decal;
 
 protected:
@@ -27,6 +27,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetBulletHoleMaterial(FString path);
+	void SetBulletHoleMaterial(UMaterialInterface* material);
 
 };
